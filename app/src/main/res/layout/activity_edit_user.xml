@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:background="#FFFFFF"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".EditUserActivity">
@@ -13,13 +14,13 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:alpha="0.2"
+        android:adjustViewBounds="true"
         android:src="@drawable/cosecha_de_zanahorias_en_campo_abierto"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Título -->
     <TextView
         android:id="@+id/textViewTitulo"
         android:layout_width="wrap_content"
@@ -32,7 +33,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp" />
 
-    <!-- Imagen de usuario -->
     <ImageView
         android:id="@+id/imageViewUsuario"
         android:layout_width="120dp"
@@ -44,64 +44,68 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
-    <!-- Botón seleccionar imagen -->
     <Button
         android:id="@+id/buttonSeleccionarImagen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Seleccionar Imagen"
         android:textSize="20sp"
+        android:background="#FFFFFF"
         app:layout_constraintTop_toBottomOf="@id/imageViewUsuario"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="8dp" />
 
-    <!-- Campo Usuario -->
     <EditText
         android:id="@+id/editTextUsuario"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Usuario"
         android:textSize="20sp"
+        android:textColor="#000000"
+        android:textColorHint="#000000"
         app:layout_constraintTop_toBottomOf="@id/buttonSeleccionarImagen"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
         android:layout_marginHorizontal="32dp" />
 
-    <!-- Campo Nombres -->
     <EditText
         android:id="@+id/editTextNombres"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Nombres"
         android:textSize="20sp"
+        android:textColor="#000000"
+        android:textColorHint="#000000"
         app:layout_constraintTop_toBottomOf="@id/editTextUsuario"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="12dp"
         android:layout_marginHorizontal="32dp" />
 
-    <!-- Campo Apellidos -->
     <EditText
         android:id="@+id/editTextApellidos"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Apellidos"
         android:textSize="20sp"
+        android:textColor="#000000"
+        android:textColorHint="#000000"
         app:layout_constraintTop_toBottomOf="@id/editTextNombres"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="12dp"
         android:layout_marginHorizontal="32dp" />
 
-    <!-- Campo Correo -->
     <EditText
         android:id="@+id/editTextCorreo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Correo"
         android:textSize="20sp"
+        android:textColor="#000000"
+        android:textColorHint="#000000"
         android:inputType="textEmailAddress"
         app:layout_constraintTop_toBottomOf="@id/editTextApellidos"
         app:layout_constraintStart_toStartOf="parent"
@@ -109,7 +113,6 @@
         android:layout_marginTop="12dp"
         android:layout_marginHorizontal="32dp" />
 
-    <!-- Campo Contraseña -->
     <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="0dp"
@@ -117,13 +120,14 @@
         android:hint="Nueva Contraseña"
         android:inputType="textPassword"
         android:textSize="20sp"
+        android:textColor="#000000"
+        android:textColorHint="#000000"
         app:layout_constraintTop_toBottomOf="@id/editTextCorreo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="12dp"
         android:layout_marginHorizontal="32dp" />
 
-    <!-- Campo Confirmar Contraseña -->
     <EditText
         android:id="@+id/editTextPasswordConfirm"
         android:layout_width="0dp"
@@ -131,13 +135,14 @@
         android:hint="Confirmar Contraseña"
         android:inputType="textPassword"
         android:textSize="20sp"
+        android:textColor="#000000"
+        android:textColorHint="#000000"
         app:layout_constraintTop_toBottomOf="@id/editTextPassword"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="8dp"
         android:layout_marginHorizontal="32dp" />
 
-    <!-- Botón Guardar -->
     <Button
         android:id="@+id/buttonGuardar"
         android:layout_width="wrap_content"
@@ -151,11 +156,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp" />
 
-    <!-- Botón Cancelar -->
-
-    <!-- Botón Volver -->
-
-    <!-- Botón Cerrar Sesión -->
     <Button
         android:id="@+id/buttonVolver"
         android:layout_width="wrap_content"

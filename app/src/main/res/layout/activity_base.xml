@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".BaseActivity">
 
     <ImageView
@@ -13,6 +14,7 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:alpha="0.5"
+        android:adjustViewBounds="true"
         android:src="@drawable/imagen1"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -25,6 +27,7 @@
         android:layout_height="wrap_content"
         android:text="Bienvenido a"
         android:textSize="40sp"
+        android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.500"
@@ -54,6 +57,7 @@
         android:gravity="center"
         android:text="by Francisco Puentes and Leonardo Ferreira"
         android:textSize="35sp"
+        android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -67,6 +71,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
         android:text="2025"
+        android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

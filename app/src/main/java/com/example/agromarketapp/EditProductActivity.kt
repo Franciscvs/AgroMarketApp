@@ -85,6 +85,7 @@ class EditProductActivity : AppCompatActivity() {
                 prefs.edit().putString("imagen_producto_${usuarioActual}_$productoIndex", it.toString()).apply()
             }
 
+
             Toast.makeText(this, "Producto guardado correctamente", Toast.LENGTH_SHORT).show()
             setResult(Activity.RESULT_OK)
             finish()
@@ -107,6 +108,14 @@ class EditProductActivity : AppCompatActivity() {
         if (requestCode == 110 && resultCode == RESULT_OK) {
             uriImagen = data?.data
             imageView.setImageURI(uriImagen)
+
+            uriImagen?.let {
+                contentResolver.takePersistableUriPermission(
+                    it,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+            }
+
         }
     }
 }

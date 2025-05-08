@@ -88,6 +88,14 @@ class EditStoreActivity : AppCompatActivity() {
         if (requestCode == 109 && resultCode == RESULT_OK) {
             uriImagen = data?.data
             imageView.setImageURI(uriImagen)
+
+            uriImagen?.let {
+                contentResolver.takePersistableUriPermission(
+                    it,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+            }
+
         }
     }
 }

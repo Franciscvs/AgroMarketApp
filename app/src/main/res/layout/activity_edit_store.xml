@@ -2,9 +2,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:fillViewport="true"
+    android:overScrollMode="ifContentScrolls">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
@@ -12,14 +13,11 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Imagen de tienda -->
-
-        <!-- Botón seleccionar imagen -->
-
         <ImageView
             android:id="@+id/Imageview1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:adjustViewBounds="true"
             android:alpha="0.2"
             android:scaleType="centerCrop"
             android:src="@drawable/campos_y_tractores_en_acci_n"
@@ -28,17 +26,17 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <ImageView
             android:id="@+id/imageViewTienda"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_marginTop="104dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/imagen_tienda"
+            android:layout_marginTop="68dp"
             android:clickable="true"
             android:focusable="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/imagen_tienda"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
@@ -50,91 +48,90 @@
             android:layout_height="wrap_content"
             android:text="Seleccionar Imagen"
             android:textSize="20sp"
+            android:textColor="#FFFFFF"
             app:layout_constraintTop_toBottomOf="@id/imageViewTienda"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="12dp" />
 
-        <!-- Nombre de la tienda -->
         <EditText
             android:id="@+id/editTextNombreTienda"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Nombre de la tienda"
             android:textSize="20sp"
+            android:textColor="#000000"
+            android:textColorHint="#000000"
             app:layout_constraintTop_toBottomOf="@id/buttonSeleccionarImagenTienda"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="16dp" />
 
-        <!-- Descripción -->
         <EditText
             android:id="@+id/editTextDescripcionTienda"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Descripción"
             android:textSize="20sp"
+            android:textColor="#000000"
+            android:textColorHint="#000000"
             app:layout_constraintTop_toBottomOf="@id/editTextNombreTienda"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="12dp" />
 
-        <!-- NUEVOS CAMPOS -->
-
-        <!-- Ubicación -->
         <EditText
             android:id="@+id/editTextUbicacion"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Ubicación / Dirección"
             android:textSize="20sp"
+            android:textColor="#000000"
+            android:textColorHint="#000000"
             app:layout_constraintTop_toBottomOf="@id/editTextDescripcionTienda"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="12dp" />
 
-        <!-- Horario -->
         <EditText
             android:id="@+id/editTextHorario"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Horario de atención"
             android:textSize="20sp"
+            android:textColor="#000000"
+            android:textColorHint="#000000"
             app:layout_constraintTop_toBottomOf="@id/editTextUbicacion"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="12dp" />
 
-        <!-- Contacto -->
         <EditText
             android:id="@+id/editTextContacto"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Número de contacto / WhatsApp"
             android:textSize="20sp"
+            android:textColor="#000000"
+            android:textColorHint="#000000"
             android:inputType="phone"
             app:layout_constraintTop_toBottomOf="@id/editTextHorario"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="12dp" />
 
-        <!-- Categoría -->
         <EditText
             android:id="@+id/editTextCategoria"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Categoría / Tipo de tienda"
             android:textSize="20sp"
+            android:textColor="#000000"
+            android:textColorHint="#000000"
             app:layout_constraintTop_toBottomOf="@id/editTextContacto"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="12dp" />
-
-        <!-- Botón guardar -->
-
-        <!-- Botón volver -->
-
-        <!-- Botón cerrar sesión -->
 
         <Button
             android:id="@+id/buttonGuardarTienda"

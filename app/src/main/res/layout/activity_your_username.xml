@@ -19,7 +19,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Imagen del usuario -->
     <ImageView
         android:id="@+id/imageViewUsuario"
         android:layout_width="120dp"
@@ -31,26 +30,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Título -->
     <TextView
         android:id="@+id/textViewTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Perfil de Usuario"
         android:textSize="30sp"
+        android:textColor="#000000"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/imageViewUsuario"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
-    <!-- Datos del usuario -->
     <TextView
         android:id="@+id/textUsuario"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Usuario:"
         android:textSize="25sp"
+        android:textColor="#000000"
         app:layout_constraintTop_toBottomOf="@id/textViewTitulo"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="32dp"
@@ -62,6 +61,7 @@
         android:layout_height="wrap_content"
         android:text="Nombres:"
         android:textSize="25sp"
+        android:textColor="#000000"
         app:layout_constraintTop_toBottomOf="@id/textUsuario"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="32dp"
@@ -73,6 +73,7 @@
         android:layout_height="wrap_content"
         android:text="Apellidos:"
         android:textSize="25sp"
+        android:textColor="#000000"
         app:layout_constraintTop_toBottomOf="@id/textNombres"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="32dp"
@@ -84,14 +85,11 @@
         android:layout_height="wrap_content"
         android:text="Correo:"
         android:textSize="25sp"
+        android:textColor="#000000"
         app:layout_constraintTop_toBottomOf="@id/textApellidos"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp" />
-
-    <!-- Botón Editar -->
-
-    <!-- Botón Volver -->
 
     <Button
         android:id="@+id/buttonEditar"
@@ -105,8 +103,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textCorreo" />
-
-    <!-- Botón Cerrar Sesión -->
 
     <Button
         android:id="@+id/button2"

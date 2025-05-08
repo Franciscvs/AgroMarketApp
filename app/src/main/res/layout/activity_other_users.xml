@@ -5,6 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:fillViewport="true"
     tools:context=".OtherUsersActivity">
 
     <ImageView
@@ -13,30 +15,31 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:alpha="0.5"
+        android:adjustViewBounds="true"
         android:src="@drawable/canaazucar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Título -->
     <TextView
         android:id="@+id/textViewTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Otros Usuarios Registrados"
         android:textSize="30sp"
+        android:textColor="#000000"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="32dp" />
 
-    <!-- ScrollView para mostrar usuarios -->
     <ScrollView
         android:id="@+id/scrollUsuarios"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:textColor="#000000"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="80dp"
         android:layout_marginHorizontal="16dp"
@@ -52,10 +55,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" />
     </ScrollView>
-
-    <!-- Botón Volver -->
-
-    <!-- Botón Cerrar Sesión -->
 
     <Button
         android:id="@+id/buttonVolver"

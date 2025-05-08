@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="24dp"
-    android:background="#FAFAFA">
+    android:textColor="#FFFFFF">
 
     <TextView
         android:id="@+id/textView2"
@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
         android:text="AgroMarket App ®"
+        android:textColor="#000000"
         android:textSize="20sp" />
 
     <TextView
@@ -19,6 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Selecciona un método de pago"
+        android:textColor="#000000"
         android:textSize="26sp"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"
@@ -33,12 +35,14 @@
             android:id="@+id/radioPSE"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="PSE" />
+            android:text="PSE"
+            android:textColor="#000000"
+            android:textSize="20sp" />
 
         <RadioButton
             android:id="@+id/radioTarjeta"
             android:textSize="20sp"
+            android:textColor="#000000"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tarjeta de crédito o débito" />
@@ -46,6 +50,7 @@
         <RadioButton
             android:id="@+id/radioBilletera"
             android:textSize="20sp"
+            android:textColor="#000000"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Billetera Digital" />
@@ -83,10 +88,10 @@
 
     <ImageView
         android:id="@+id/Imageview1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:alpha="0.5"
-        android:src="@drawable/arado"/>
+        android:scaleType="centerCrop"
+        android:src="@drawable/arado" />
 
 </LinearLayout>

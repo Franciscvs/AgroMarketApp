@@ -10,10 +10,13 @@
 
     <ImageView
         android:id="@+id/Imageview1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
         android:alpha="0.5"
+        android:clickable="false"
+        android:focusable="false"
+        android:scaleType="centerCrop"
         android:src="@drawable/cosecha_en_campo_verde__"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

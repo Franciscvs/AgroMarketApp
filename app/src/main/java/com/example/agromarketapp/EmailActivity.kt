@@ -31,7 +31,7 @@ class EmailActivity : AppCompatActivity() {
             val usuario = usuarios.find { it.correo == correoIngresado }
 
             if (usuario != null) {
-                // Guardamos como usuario_actual al que recuperó su contraseña
+
                 prefs.edit().putString("usuario_actual", usuario.usuario).apply()
                 startActivity(Intent(this, PasswordActivity::class.java))
             } else {

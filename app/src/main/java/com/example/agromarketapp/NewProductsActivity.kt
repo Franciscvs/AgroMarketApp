@@ -1,4 +1,3 @@
-// NewProductsActivity.kt
 package com.example.agromarketapp
 
 import android.content.Intent

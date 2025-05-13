@@ -1,4 +1,3 @@
-// EditUserActivity.kt
 package com.example.agromarketapp
 
 import android.app.Activity

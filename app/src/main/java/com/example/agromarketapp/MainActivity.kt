@@ -37,10 +37,10 @@ class MainActivity : AppCompatActivity() {
             val tiendaRegistrada = prefs.getString("tienda_$usuario", null)
 
             if (tiendaRegistrada != null) {
-                // Si ya tiene tienda, ir a verla
+
                 startActivity(Intent(this, YourStoreActivity::class.java))
             } else {
-                // Si no tiene tienda, ir a crearla
+
                 Toast.makeText(this, "No tienes tienda registrada. Vamos a crear una.", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this, EditStoreActivity::class.java))
             }

@@ -110,11 +110,16 @@ class EditProductActivity : AppCompatActivity() {
             imageView.setImageURI(uriImagen)
 
             uriImagen?.let {
-                contentResolver.takePersistableUriPermission(
-                    it,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION
-                )
+                try {
+                    contentResolver.takePersistableUriPermission(
+                        it,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                } catch (e: SecurityException) {
+                    e.printStackTrace()
+                }
             }
+
 
         }
     }

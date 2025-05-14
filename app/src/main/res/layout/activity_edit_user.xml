@@ -26,7 +26,7 @@
             android:clickable="false"
             android:focusable="false"
             android:scaleType="centerCrop"
-            android:src="@drawable/cosecha_de_zanahorias_en_campo_abierto"
+            android:src="@drawable/usuario_edit"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

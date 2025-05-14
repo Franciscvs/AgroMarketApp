@@ -8,67 +8,72 @@ import androidx.appcompat.app.AppCompatActivity
 
 class YourUsernameActivity : AppCompatActivity() {
 
+    private lateinit var imageViewUsuario: ImageView
+    private lateinit var textUsuario: TextView
+    private lateinit var textNombres: TextView
+    private lateinit var textApellidos: TextView
+    private lateinit var textCorreo: TextView
+    private lateinit var buttonEditar: Button
+    private lateinit var buttonVolver: Button
+    private lateinit var buttonCerrarSesion: Button
+
     private lateinit var prefs: android.content.SharedPreferences
     private lateinit var usuarioActual: String
-    private lateinit var imageView: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_your_username)
 
+        imageViewUsuario = findViewById(R.id.imageViewUsuario)
+        textUsuario = findViewById(R.id.textUsuario)
+        textNombres = findViewById(R.id.textNombres)
+        textApellidos = findViewById(R.id.textApellidos)
+        textCorreo = findViewById(R.id.textCorreo)
+        buttonEditar = findViewById(R.id.buttonEditar)
+        buttonVolver = findViewById(R.id.button2)
+        buttonCerrarSesion = findViewById(R.id.button1)
+
         prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
         usuarioActual = prefs.getString("usuario_actual", "") ?: ""
-        imageView = findViewById(R.id.imageViewUsuario)
 
-        val listaUsuarios = prefs.getString("usuarios", null)?.split(";")?.map {
-            val campos = it.split("|")
-            Usuario(campos[0], campos[1], campos[2], campos[3], campos[4])
-        } ?: emptyList()
+        cargarDatos()
 
-        val usuario = listaUsuarios.find { it.usuario == usuarioActual }
+        buttonEditar.setOnClickListener {
+            startActivity(Intent(this, EditUserActivity::class.java))
+        }
 
-        if (usuario != null) {
-            findViewById<TextView>(R.id.textUsuario).text = "Usuario: ${usuario.usuario}"
-            findViewById<TextView>(R.id.textNombres).text = "Nombres: ${usuario.nombres}"
-            findViewById<TextView>(R.id.textApellidos).text = "Apellidos: ${usuario.apellidos}"
-            findViewById<TextView>(R.id.textCorreo).text = "Correo: ${usuario.correo}"
+        buttonVolver.setOnClickListener {
+            finish()
+        }
 
-            val uri = prefs.getString("imagen_${usuario.usuario}", null)
+        buttonCerrarSesion.setOnClickListener {
+            prefs.edit().remove("usuario_actual").apply()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finishAffinity()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        cargarDatos()
+    }
+
+    private fun cargarDatos() {
+        val lista = Usuario.cargarUsuariosDesdePrefs(prefs)
+        val usuario = lista.find { it.usuario == usuarioActual }
+
+        usuario?.let {
+            textUsuario.text = it.usuario
+            textNombres.text = it.nombres
+            textApellidos.text = it.apellidos
+            textCorreo.text = it.correo
+
+            val uri = prefs.getString("imagen_usuario_${it.usuario}", null)
             if (!uri.isNullOrEmpty()) {
-                try {
-                    imageView.setImageURI(Uri.parse(uri))
-                } catch (e: Exception) {
-                    Toast.makeText(this, "Error al cargar imagen de usuario", Toast.LENGTH_SHORT).show()
-                }
+                imageViewUsuario.setImageURI(Uri.parse(uri))
+            } else {
+                imageViewUsuario.setImageResource(R.drawable.imagen_usuario)
             }
-        } else {
-            Toast.makeText(this, "No se encontraron los datos del usuario", Toast.LENGTH_SHORT).show()
         }
-
-        findViewById<Button>(R.id.buttonEditar).setOnClickListener {
-            startActivityForResult(Intent(this, EditUserActivity::class.java), 200)
-        }
-
-        findViewById<Button>(R.id.button2).setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
-        }
-
-        findViewById<Button>(R.id.button1).setOnClickListener {
-            cerrarSesion()
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 200) {
-            recreate()
-        }
-    }
-
-    private fun cerrarSesion() {
-        prefs.edit().remove("usuario_actual").apply()
-        startActivity(Intent(this, LoginActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        })
     }
 }

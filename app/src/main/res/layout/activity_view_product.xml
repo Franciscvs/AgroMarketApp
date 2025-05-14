@@ -20,7 +20,7 @@
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"
             android:alpha="0.4"
-            android:src="@drawable/arado"
+            android:src="@drawable/nuevos_productos"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

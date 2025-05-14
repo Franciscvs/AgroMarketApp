@@ -23,7 +23,7 @@
             android:clickable="false"
             android:focusable="false"
             android:scaleType="centerCrop"
-            android:src="@drawable/campos_y_tractores_en_acci_n"
+            android:src="@drawable/tienda_edit"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

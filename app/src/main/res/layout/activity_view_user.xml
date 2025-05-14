@@ -19,7 +19,7 @@
             android:scaleType="centerCrop"
             android:alpha="0.4"
             android:adjustViewBounds="true"
-            android:src="@drawable/algodon"
+            android:src="@drawable/otros_usuarios"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

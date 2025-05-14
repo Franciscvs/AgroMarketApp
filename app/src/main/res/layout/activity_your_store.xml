@@ -1,178 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    android:padding="16dp"
+    android:fillViewport="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="0dp"
-        android:background="#FFFFFF">
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Título -->
 
         <ImageView
-            android:id="@+id/Imageview1"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:adjustViewBounds="true"
-            android:alpha="0.5"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ovejas"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <ImageView
-            android:id="@+id/imageViewTienda"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_marginTop="64dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/imagen_tienda"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:id="@+id/imageView6"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:srcCompat="@drawable/techo_tienda" />
 
         <TextView
-            android:id="@+id/textNombreTienda"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nombre de la tienda"
+            android:text="Mi Tienda"
             android:textSize="30sp"
             android:textColor="#000000"
             android:textStyle="bold"
-            android:layout_marginTop="12dp"
-            app:layout_constraintTop_toBottomOf="@id/imageViewTienda"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:layout_marginBottom="16dp" />
 
-        <TextView
-            android:id="@+id/textDescripcionTienda"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Descripción de la tienda"
-            android:textSize="25sp"
-            android:textColor="#000000"
-            android:layout_marginTop="8dp"
-            android:layout_marginHorizontal="24dp"
-            app:layout_constraintTop_toBottomOf="@id/textNombreTienda"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+        <!-- Imagen tienda -->
 
-        <TextView
-            android:id="@+id/textUbicacion"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Ubicación:"
-            android:textSize="20sp"
-            android:textColor="#000000"
-            android:layout_marginTop="8dp"
-            android:layout_marginHorizontal="24dp"
-            app:layout_constraintTop_toBottomOf="@id/textDescripcionTienda"
-            app:layout_constraintStart_toStartOf="parent" />
+        <ImageView
+            android:id="@+id/imageViewTienda"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/imagen_tienda"
+            android:layout_marginBottom="12dp" />
 
+        <!-- Datos de la tienda -->
         <TextView
-            android:id="@+id/textHorario"
-            android:layout_width="0dp"
+            android:id="@+id/textNombreTienda"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Horario:"
-            android:textSize="20sp"
+            android:text="Nombre"
+            android:textStyle="bold"
             android:textColor="#000000"
-            android:layout_marginTop="4dp"
-            android:layout_marginHorizontal="24dp"
-            app:layout_constraintTop_toBottomOf="@id/textUbicacion"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/textContacto"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Contacto:"
-            android:textSize="20sp"
-            android:textColor="#000000"
-            android:layout_marginTop="4dp"
-            android:layout_marginHorizontal="24dp"
-            app:layout_constraintTop_toBottomOf="@id/textHorario"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:textSize="25sp" />
 
         <TextView
             android:id="@+id/textCategoria"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Categoría:"
-            android:textSize="20sp"
             android:textColor="#000000"
-            android:layout_marginTop="4dp"
-            android:layout_marginHorizontal="24dp"
-            app:layout_constraintTop_toBottomOf="@id/textContacto"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:textSize="20sp"
+            android:text="Categoría" />
 
-        <Button
-            android:id="@+id/buttonEditarTienda"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/textUbicacion"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:text="Ubicación" />
+
+        <TextView
+            android:id="@+id/textHorario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:text="Horario" />
+
+        <TextView
+            android:id="@+id/textContacto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:text="Contacto" />
+
+        <TextView
+            android:id="@+id/textDescripcionTienda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:text="Descripción"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Botones de acción -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="12dp">
+
+            <Button
+                android:id="@+id/buttonEditarTienda"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#2196F3"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:text="Editar tienda" />
+
+            <Space
+                android:layout_width="12dp"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/buttonAgregarProducto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#4CAF50"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:text="Agregar producto" />
+        </LinearLayout>
+
+        <!-- Lista de productos -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mis Productos"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="25sp"
             android:layout_marginTop="16dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
-            android:backgroundTint="#2196F3"
-            android:text="Editar Tienda"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            app:layout_constraintTop_toBottomOf="@id/textCategoria"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/buttonAgregarProducto" />
-
-        <Button
-            android:id="@+id/buttonAgregarProducto"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
-            android:backgroundTint="#4CAF50"
-            android:text="Agregar Producto"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textCategoria" />
+            android:layout_marginBottom="8dp" />
 
         <LinearLayout
             android:id="@+id/contenedorProductos"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@id/buttonAgregarProducto"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:orientation="vertical" />
 
-        <Button
-            android:id="@+id/buttonVolver"
-            android:layout_width="wrap_content"
+        <!-- Botones de navegación -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="156dp"
-            android:backgroundTint="#8A6120"
-            android:text="Volver"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/contenedorProductos" />
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="24dp">
 
-        <Button
-            android:id="@+id/buttonCerrarSesion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="156dp"
-            android:layout_marginEnd="12dp"
-            android:backgroundTint="#D32F2F"
-            android:text="Cerrar Sesión"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/contenedorProductos" />
+            <Button
+                android:id="@+id/buttonVolver"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#8A6120"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:text="Volver" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <Space
+                android:layout_width="16dp"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/buttonCerrarSesion"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#D32F2F"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:text="Cerrar sesión" />
+        </LinearLayout>
+
+    </LinearLayout>
 </ScrollView>

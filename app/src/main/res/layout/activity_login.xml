@@ -24,7 +24,7 @@
             android:adjustViewBounds="true"
             android:alpha="0.5"
             android:scaleType="centerCrop"
-            android:src="@drawable/imagen2"
+            android:src="@drawable/campesinos_login"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

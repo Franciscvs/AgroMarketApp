@@ -16,7 +16,7 @@
         android:adjustViewBounds="true"
         android:alpha="0.5"
         android:scaleType="centerCrop"
-        android:src="@drawable/imagen1"
+        android:src="@drawable/arando_base"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -159,11 +159,14 @@
         app:layout_constraintTop_toBottomOf="@id/imageView3" />
 
     <!-- Botón Borrar Datos -->
+
+
     <Button
         android:id="@+id/buttonBorrarTodo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="45dp"
         android:backgroundTint="#B00020"
         android:text="Borrar Datos"
         android:textColor="#FFFFFF"
@@ -171,13 +174,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+
     <Button
         android:id="@+id/buttonResumen"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
         android:layout_marginStart="7dp"
         android:layout_marginBottom="10dp"
         android:backgroundTint="#888888"
+        android:textColor="#FFFFFF"
         android:text="Resumen de la App"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"

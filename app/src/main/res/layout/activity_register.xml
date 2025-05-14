@@ -17,7 +17,7 @@
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
         android:alpha="0.4"
-        android:src="@drawable/caballos"
+        android:src="@drawable/registro_caballos"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

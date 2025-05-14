@@ -12,6 +12,9 @@ class OtherStoresActivity : AppCompatActivity() {
     private lateinit var contenedorTiendas: LinearLayout
     private lateinit var editBuscarTienda: EditText
     private lateinit var buttonBuscarTienda: Button
+    private lateinit var spinnerCategoriasTiendas: Spinner
+    private lateinit var buttonFiltrarCategoriaTiendas: Button
+    private lateinit var buttonLimpiarFiltros: Button
     private lateinit var buttonVolver: Button
     private lateinit var buttonCerrarSesion: Button
 
@@ -23,18 +26,23 @@ class OtherStoresActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_stores)
 
+        // Referencias UI
         contenedorTiendas = findViewById(R.id.contenedorTiendas)
         editBuscarTienda = findViewById(R.id.editBuscarTienda)
         buttonBuscarTienda = findViewById(R.id.buttonBuscarTienda)
+        spinnerCategoriasTiendas = findViewById(R.id.spinnerCategoriasTiendas)
+        buttonFiltrarCategoriaTiendas = findViewById(R.id.buttonFiltrarCategoriaTiendas)
+        buttonLimpiarFiltros = findViewById(R.id.buttonLimpiarFiltros)
         buttonVolver = findViewById(R.id.buttonVolver)
         buttonCerrarSesion = findViewById(R.id.buttonCerrarSesion)
 
         prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
-        usuarioActual = prefs.getString("usuario_actual", null) ?: ""
+        usuarioActual = prefs.getString("usuario_actual", "") ?: ""
 
         cargarTodasLasTiendas()
         mostrarTiendas(todasLasTiendas)
 
+        // Buscar por nombre o categoría
         buttonBuscarTienda.setOnClickListener {
             val filtro = editBuscarTienda.text.toString().trim().lowercase()
             val resultado = if (filtro.isEmpty()) {
@@ -43,9 +51,31 @@ class OtherStoresActivity : AppCompatActivity() {
                 todasLasTiendas.filter {
                     it.first.nombre.lowercase().contains(filtro) ||
                             it.first.categoria.lowercase().contains(filtro)
-                }.toMutableList()
+                }
             }
             mostrarTiendas(resultado)
+        }
+
+        // Spinner con categorías de tienda
+        val categoriasTiendas = todasLasTiendas.map { it.first.categoria }.distinct().sorted()
+        val adaptadorTiendas = ArrayAdapter(this, android.R.layout.simple_spinner_item, listOf("Todas") + categoriasTiendas)
+        adaptadorTiendas.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerCategoriasTiendas.adapter = adaptadorTiendas
+
+        buttonFiltrarCategoriaTiendas.setOnClickListener {
+            val seleccion = spinnerCategoriasTiendas.selectedItem.toString()
+            val resultado = if (seleccion == "Todas") {
+                todasLasTiendas
+            } else {
+                todasLasTiendas.filter { it.first.categoria == seleccion }
+            }
+            mostrarTiendas(resultado)
+        }
+
+        buttonLimpiarFiltros.setOnClickListener {
+            editBuscarTienda.setText("")
+            spinnerCategoriasTiendas.setSelection(0)
+            mostrarTiendas(todasLasTiendas)
         }
 
         buttonVolver.setOnClickListener {

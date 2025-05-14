@@ -33,6 +33,20 @@
             android:background="@android:drawable/edit_text"
             android:layout_marginBottom="12dp" />
 
+        <Spinner
+            android:id="@+id/spinnerCategorias"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/buttonFiltrarCategoria"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filtrar por categoría"
+            android:layout_gravity="end"
+            android:layout_marginBottom="16dp" />
+
         <Button
             android:id="@+id/buttonBuscar"
             android:layout_width="wrap_content"
@@ -41,6 +55,13 @@
             android:layout_gravity="end"
             android:layout_marginBottom="16dp" />
 
+        <Button
+            android:id="@+id/buttonLimpiarFiltros"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Limpiar filtros"
+            android:layout_gravity="end"
+            android:layout_marginBottom="16dp" />
 
         <LinearLayout
             android:id="@+id/contenedorProductos"

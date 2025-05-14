@@ -13,6 +13,9 @@ class NewProductsActivity : AppCompatActivity() {
     private lateinit var contenedorProductos: LinearLayout
     private lateinit var editBuscarProducto: EditText
     private lateinit var buttonBuscar: Button
+    private lateinit var spinnerCategorias: Spinner
+    private lateinit var buttonFiltrarCategoria: Button
+    private lateinit var buttonLimpiarFiltros: Button
     private lateinit var buttonVolver: Button
     private lateinit var buttonCerrarSesion: Button
 
@@ -25,18 +28,24 @@ class NewProductsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_products)
 
+        // Referencias UI
         contenedorProductos = findViewById(R.id.contenedorProductos)
         editBuscarProducto = findViewById(R.id.editBuscarProducto)
         buttonBuscar = findViewById(R.id.buttonBuscar)
+        spinnerCategorias = findViewById(R.id.spinnerCategorias)
+        buttonFiltrarCategoria = findViewById(R.id.buttonFiltrarCategoria)
+        buttonLimpiarFiltros = findViewById(R.id.buttonLimpiarFiltros)
         buttonVolver = findViewById(R.id.buttonVolver)
         buttonCerrarSesion = findViewById(R.id.buttonCerrarSesion)
 
         prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
         usuarioActual = prefs.getString("usuario_actual", "") ?: ""
 
+        // Cargar productos globales
         cargarTodosLosProductos()
         mostrarProductos(todosLosProductos)
 
+        // Buscar por nombre
         buttonBuscar.setOnClickListener {
             val filtro = editBuscarProducto.text.toString().trim().lowercase()
             val filtrados = if (filtro.isEmpty()) {
@@ -44,9 +53,33 @@ class NewProductsActivity : AppCompatActivity() {
             } else {
                 todosLosProductos.filter {
                     it.first.nombre.lowercase().contains(filtro)
-                }.toMutableList()
+                }
             }
             mostrarProductos(filtrados)
+        }
+
+        // Cargar categorías al Spinner
+        val categoriasDisponibles = todosLosProductos.map { it.first.categoria }.distinct().sorted()
+        val adaptador = ArrayAdapter(this, android.R.layout.simple_spinner_item, listOf("Todas") + categoriasDisponibles)
+        adaptador.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerCategorias.adapter = adaptador
+
+        // Filtrar por categoría
+        buttonFiltrarCategoria.setOnClickListener {
+            val seleccion = spinnerCategorias.selectedItem.toString()
+            val filtrados = if (seleccion == "Todas") {
+                todosLosProductos
+            } else {
+                todosLosProductos.filter { it.first.categoria == seleccion }
+            }
+            mostrarProductos(filtrados)
+        }
+
+        // Limpiar filtros
+        buttonLimpiarFiltros.setOnClickListener {
+            editBuscarProducto.setText("")
+            spinnerCategorias.setSelection(0)
+            mostrarProductos(todosLosProductos)
         }
 
         buttonVolver.setOnClickListener {

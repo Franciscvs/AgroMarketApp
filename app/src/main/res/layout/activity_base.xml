@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -16,8 +15,6 @@
         android:layout_height="0dp"
         android:adjustViewBounds="true"
         android:alpha="0.5"
-        android:clickable="false"
-        android:focusable="false"
         android:scaleType="centerCrop"
         android:src="@drawable/imagen1"
         app:layout_constraintTop_toTopOf="parent"
@@ -25,110 +22,139 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Logo -->
-
-    <!-- Título -->
+    <!-- Logo principal -->
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="24dp"
-        android:layout_marginBottom="8dp"
         android:adjustViewBounds="true"
         android:scaleType="centerInside"
         android:src="@drawable/logoagromarketapp"
-        app:layout_constraintBottom_toTopOf="@id/textView1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.25"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.5" />
+        app:layout_constraintBottom_toTopOf="@id/textView1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.5"
+        app:layout_constraintHeight_percent="0.25" />
 
+    <!-- Título -->
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:text="Bienvenido"
-        android:textSize="32sp"
         android:textColor="#000000"
+        android:textSize="32sp"
         app:layout_constraintTop_toBottomOf="@id/imageView2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Subtítulo -->
-
-    <!-- Botón Crear Cuenta -->
-
+    <!-- Subtítulos -->
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="40dp"
         android:fontFamily="sans-serif-black"
-        android:text="'Únete a una App comprometida'"
+        android:text="Únete a una App comprometida"
         android:textColor="#000000"
-        android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.515"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView1" />
-
-    <!-- Botón Iniciar Sesión -->
-
-    <!-- Autores -->
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="48dp"
-        android:layout_marginTop="56dp"
-        android:backgroundTint="#8A6120"
-        android:text="Crear Cuenta"
-        android:textColor="#FFFFFF"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView2" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="48dp"
-        android:layout_marginTop="60dp"
-        android:backgroundTint="#8A6120"
-        android:text="Iniciar Sesión"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button1" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="by Francisco Puentes and Leonardo Ferreira"
-        android:textSize="25sp"
-        android:fontFamily="cursive"
+        android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif-black"
+        android:text="con los agricultores de Colombia"
         android:textColor="#000000"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@id/button2"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/textView2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Año -->
+    <!-- Botones -->
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:layout_marginHorizontal="48dp"
+        android:backgroundTint="#8A6120"
+        android:text="Crear Cuenta"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/textView3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="48dp"
+        android:backgroundTint="#8A6120"
+        android:text="Iniciar Sesión"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/button1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Autores y año -->
+
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="AgroMarket App ® 2025"
-        android:textSize="25sp"
+        android:layout_marginTop="40dp"
+        android:fontFamily="cursive"
+        android:text="by Francisco Puentes and Leonardo Ferreira"
         android:textColor="#000000"
-        android:fontFamily="sans-serif-black"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button2" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        app:layout_constraintTop_toBottomOf="@id/textView3"
+        android:fontFamily="sans-serif-black"
+        android:text="® 2025"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/textView4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Marca Colombiana -->
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="105dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/logo_agromarket_colombia"
+        app:layout_constraintTop_toBottomOf="@id/textView5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100% Colombiano"
+        android:textColor="#000000"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/imageView3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -137,11 +163,11 @@
         android:id="@+id/buttonBorrarTodo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Borrar Datos"
-        android:textSize="12sp"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#B00020"
         android:layout_margin="12dp"
+        android:backgroundTint="#B00020"
+        android:text="Borrar Datos"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

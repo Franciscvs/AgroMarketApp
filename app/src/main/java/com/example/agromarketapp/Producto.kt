@@ -12,7 +12,8 @@ data class Producto(
     val unidadVenta: String,
     val fechaCosecha: String,
     val certificacion: String,
-    val regionOrigen: String
+    val regionOrigen: String,
+    val categoria: String
 ) {
     companion object {
         fun cargarProductosDesdePrefs(prefs: SharedPreferences, usuario: String): MutableList<Producto> {

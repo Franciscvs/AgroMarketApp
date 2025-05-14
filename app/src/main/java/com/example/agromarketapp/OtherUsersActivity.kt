@@ -3,75 +3,103 @@ package com.example.agromarketapp
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.Gravity
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.setPadding
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class OtherUsersActivity : AppCompatActivity() {
 
-    private lateinit var prefs: android.content.SharedPreferences
-    private lateinit var usuarioActual: String
-    private lateinit var contenedor: LinearLayout
+    private lateinit var contenedorUsuarios: LinearLayout
+    private lateinit var buttonVolver: Button
+    private lateinit var buttonCerrarSesion: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_users)
 
-        prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
-        usuarioActual = prefs.getString("usuario_actual", "") ?: ""
-        contenedor = findViewById(R.id.contenedorUsuarios)
+        contenedorUsuarios = findViewById(R.id.contenedorUsuarios)
+        buttonVolver = findViewById(R.id.buttonVolver)
+        buttonCerrarSesion = findViewById(R.id.buttonCerrarSesion)
 
-        val usuarios = prefs.getString("usuarios", null)?.split(";")?.mapNotNull {
-            val campos = it.split("|")
-            if (campos.size == 5) Usuario(campos[0], campos[1], campos[2], campos[3], campos[4]) else null
-        }?.filter { it.usuario != usuarioActual } ?: emptyList()
+        val prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
+        val usuarioActual = prefs.getString("usuario_actual", null)
 
-        contenedor.removeAllViews()
+        // Cargar lista de usuarios
+        val listaUsuarios = Usuario.cargarUsuariosDesdePrefs(prefs)
 
-        usuarios.forEach { usuario ->
-            val layout = LinearLayout(this)
-            layout.orientation = LinearLayout.VERTICAL
-            layout.setPadding(16)
+        // Mostrar solo los otros usuarios
+        val otros = listaUsuarios.filter { it.usuario != usuarioActual }
 
-            val nombre = TextView(this)
-            nombre.text = "${usuario.nombres} ${usuario.apellidos}"
-            nombre.textSize = 18f
-            layout.addView(nombre)
+        contenedorUsuarios.removeAllViews()
 
-            val correo = TextView(this)
-            correo.text = usuario.correo
-            layout.addView(correo)
+        for (usuario in otros) {
+            val layout = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                setPadding(24, 24, 24, 24)
+                val params = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                params.setMargins(0, 16, 0, 16)
+                layoutParams = params
+                background = getDrawable(R.drawable.card_background) // fondo opcional si lo tienes
+            }
 
-            val uri = prefs.getString("imagen_${usuario.usuario}", null)
-            if (!uri.isNullOrEmpty()) {
-                try {
-                    val image = ImageView(this)
-                    image.setImageURI(Uri.parse(uri))
-                    image.layoutParams = LinearLayout.LayoutParams(300, 300)
-                    layout.addView(image)
-                } catch (e: Exception) {
-                    Toast.makeText(this, "Error al cargar imagen de usuario", Toast.LENGTH_SHORT).show()
+            val imageView = ImageView(this).apply {
+                layoutParams = LinearLayout.LayoutParams(200, 200)
+                val uriStr = prefs.getString("imagen_usuario_${usuario.usuario}", null)
+                if (!uriStr.isNullOrEmpty()) {
+                    setImageURI(Uri.parse(uriStr))
+                } else {
+                    setImageResource(R.drawable.imagen_usuario) // imagen por defecto
                 }
             }
 
-            layout.setOnClickListener {
-                val intent = Intent(this, ViewUserActivity::class.java)
-                intent.putExtra("usuarioSeleccionado", usuario.usuario)
-                startActivity(intent)
+            val datos = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                setPadding(16, 0, 0, 0)
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             }
 
-            contenedor.addView(layout)
+            val nombre = TextView(this).apply {
+                text = "Usuario: ${usuario.usuario}"
+                textSize = 18f
+            }
+
+            val nombreCompleto = TextView(this).apply {
+                text = "Nombre: ${usuario.nombres} ${usuario.apellidos}"
+                textSize = 16f
+            }
+
+            val botonVer = Button(this).apply {
+                text = "Ver perfil"
+                setOnClickListener {
+                    val intent = Intent(this@OtherUsersActivity, ViewUserActivity::class.java)
+                    intent.putExtra("usuario_propietario", usuario.usuario)
+                    startActivity(intent)
+                }
+            }
+
+            datos.addView(nombre)
+            datos.addView(nombreCompleto)
+            datos.addView(botonVer)
+
+            layout.addView(imageView)
+            layout.addView(datos)
+
+            contenedorUsuarios.addView(layout)
         }
 
-        findViewById<Button>(R.id.buttonVolver).setOnClickListener {
+        buttonVolver.setOnClickListener {
             finish()
         }
 
-        findViewById<Button>(R.id.buttonCerrarSesion).setOnClickListener {
+        buttonCerrarSesion.setOnClickListener {
             prefs.edit().remove("usuario_actual").apply()
-            startActivity(Intent(this, LoginActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            })
+            startActivity(Intent(this, LoginActivity::class.java))
+            finishAffinity()
         }
     }
 }

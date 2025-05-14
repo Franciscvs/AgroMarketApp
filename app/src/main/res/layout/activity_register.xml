@@ -180,7 +180,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:backgroundTint="#8A6120"
-        android:text="Crear Cuenta"
+        android:text="Registrar Cuenta"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"

@@ -2,85 +2,58 @@ package com.example.agromarketapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 class LoginActivity : AppCompatActivity() {
+
+    private lateinit var editUsuario: EditText
+    private lateinit var editContrasena: EditText
+    private lateinit var buttonIngresar: Button
+    private lateinit var buttonIraRegistro: Button
+    private lateinit var buttonOlvidoContrasena: Button
+    private lateinit var buttonVolver: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_login)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        editUsuario = findViewById(R.id.editTextText1)
+        editContrasena = findViewById(R.id.editTextTextPassword1)
+        buttonIngresar = findViewById(R.id.button2)
+        buttonIraRegistro = findViewById(R.id.button4)
+        buttonOlvidoContrasena = findViewById(R.id.button3)
+        buttonVolver = findViewById(R.id.button1)
 
-        val editUsuario = findViewById<EditText>(R.id.editTextText1)
-        val editPassword = findViewById<EditText>(R.id.editTextTextPassword1)
-        val btnAtras = findViewById<Button>(R.id.button1)
-        val btnIngresar = findViewById<Button>(R.id.button2)
-        val btnRecuperarCorreo = findViewById<Button>(R.id.button3)
-        val btnCrearCuenta = findViewById<Button>(R.id.button4)
+        val prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
 
-        btnIngresar.setOnClickListener {
+        buttonIngresar.setOnClickListener {
             val usuario = editUsuario.text.toString().trim()
-            val contrasena = editPassword.text.toString()
+            val contrasena = editContrasena.text.toString()
 
-            if (usuario.isEmpty() || contrasena.isEmpty()) {
-                Toast.makeText(this, "Por favor ingresa usuario y contraseña.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+            val lista = Usuario.cargarUsuariosDesdePrefs(prefs)
 
-            val prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
-            val stringUsuarios = prefs.getString("usuarios", null)
-            val usuarios = obtenerUsuariosGuardados(stringUsuarios)
+            val encontrado = lista.find { it.usuario == usuario && it.contrasena == contrasena }
 
-            val usuarioValido = usuarios.find { it.usuario == usuario && it.contrasena == contrasena }
-
-            if (usuarioValido != null) {
-                prefs.edit().putString("usuario_actual", usuario).apply() // ← importante
-                Toast.makeText(this, "Ingreso exitoso. Bienvenido ${usuarioValido.nombres}", Toast.LENGTH_SHORT).show()
+            if (encontrado != null) {
+                prefs.edit().putString("usuario_actual", usuario).apply()
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             } else {
-                Toast.makeText(this, "Usuario o contraseña incorrectos.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show()
             }
         }
 
-        btnAtras.setOnClickListener {
-            val intent = Intent(this, BaseActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-            startActivity(intent)
-            finish()
+        buttonIraRegistro.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
 
-        btnRecuperarCorreo.setOnClickListener {
+        buttonOlvidoContrasena.setOnClickListener {
             startActivity(Intent(this, EmailActivity::class.java))
         }
 
-        btnCrearCuenta.setOnClickListener {
-            startActivity(Intent(this, RegisterActivity::class.java))
+        buttonVolver.setOnClickListener {
+            finish()
         }
-    }
-
-    private fun obtenerUsuariosGuardados(prefString: String?): MutableList<Usuario> {
-        val lista = mutableListOf<Usuario>()
-        if (!prefString.isNullOrEmpty()) {
-            val registros = prefString.split(";")
-            for (r in registros) {
-                val campos = r.split("|")
-                if (campos.size == 5) {
-                    lista.add(Usuario(campos[0], campos[1], campos[2], campos[3], campos[4]))
-                }
-            }
-        }
-        return lista
     }
 }

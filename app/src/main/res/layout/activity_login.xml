@@ -31,19 +31,22 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <!-- Botón Atrás -->
+
+        <!-- Logo -->
+
         <Button
             android:id="@+id/button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Atrás"
-            android:textSize="20sp"
-            android:textColor="#FFFFFF"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
             android:backgroundTint="#8A6120"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:text="Atrás"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Logo -->
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="226dp"
@@ -63,7 +66,7 @@
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Usuario:"
+            android:text="  Usuario:"
             android:textSize="25sp"
             android:textColor="#000000"
             app:layout_constraintTop_toBottomOf="@id/imageView2"
@@ -73,7 +76,7 @@
             android:id="@+id/editTextText1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Ingresa Usuario"
+            android:hint="  Ingresa Usuario"
             android:inputType="text"
             android:textColor="#000000"
             android:textColorHint="#888888"
@@ -88,7 +91,7 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Contraseña:"
+            android:text="  Contraseña:"
             android:textSize="25sp"
             android:textColor="#000000"
             android:layout_marginTop="12dp"
@@ -99,7 +102,7 @@
             android:id="@+id/editTextTextPassword1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Ingresa Contraseña"
+            android:hint="  Ingresa Contraseña"
             android:inputType="textPassword"
             android:textColor="#000000"
             android:textColorHint="#888888"

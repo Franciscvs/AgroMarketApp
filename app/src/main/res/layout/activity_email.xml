@@ -8,7 +8,7 @@
     android:fillViewport="true"
     android:background="#FFFFFF"
     android:overScrollMode="ifContentScrolls"
-    tools:context=".BaseActivity">
+    tools:context=".EmailActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"

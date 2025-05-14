@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     android:fillViewport="true"
-    tools:context=".BaseActivity">
+    tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
@@ -72,7 +72,7 @@
             android:layout_height="0dp"
             android:layout_marginTop="52dp"
             android:layout_marginEnd="8dp"
-            android:backgroundTint="#8BC34A"
+            android:backgroundTint="#AED581"
             android:text="Tu Tienda"
             android:textColor="#000000"
             android:textSize="20sp"
@@ -88,7 +88,7 @@
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="52dp"
-            android:backgroundTint="#9C27B0"
+            android:backgroundTint="#BA68C8"
             android:text="Tu Usuario"
             android:textColor="#000000"
             android:textSize="20sp"
@@ -105,7 +105,7 @@
             android:text="Nuevos Productos"
             android:textSize="20sp"
             android:textColor="#000000"
-            android:backgroundTint="#3F51B5"
+            android:backgroundTint="#4FC3F7"
             app:layout_constraintTop_toBottomOf="@id/button2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/button5"
@@ -121,7 +121,7 @@
             android:text="Productos Comprados"
             android:textSize="20sp"
             android:textColor="#000000"
-            android:backgroundTint="#FFC107"
+            android:backgroundTint="#FFD54F"
             app:layout_constraintTop_toBottomOf="@id/button3"
             app:layout_constraintStart_toEndOf="@+id/button4"
             app:layout_constraintEnd_toEndOf="parent"
@@ -138,7 +138,7 @@
             android:text="Otras Tiendas"
             android:textSize="20sp"
             android:textColor="#000000"
-            android:backgroundTint="#00BCD4"
+            android:backgroundTint="#4DB6AC"
             app:layout_constraintTop_toBottomOf="@id/button4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/button7"
@@ -154,7 +154,7 @@
             android:text="Otros Usuarios"
             android:textSize="20sp"
             android:textColor="#000000"
-            android:backgroundTint="#CDDC39"
+            android:backgroundTint="#FF8A65"
             app:layout_constraintTop_toBottomOf="@id/button5"
             app:layout_constraintStart_toEndOf="@+id/button6"
             app:layout_constraintEnd_toEndOf="parent"
@@ -164,17 +164,39 @@
             android:layout_marginStart="8dp" />
 
         <!-- Footer -->
+
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="AgroMarket App ®"
-            android:textSize="20sp"
-            android:textColor="#000000"
+            android:layout_marginTop="20dp"
             android:fontFamily="sans-serif"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="24dp"
-            app:layout_constraintTop_toBottomOf="@id/button6"
+            android:text="AgroMarket App ®"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button6" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="105dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/logo_agromarket_colombia"
+            app:layout_constraintTop_toBottomOf="@id/textView2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="100% Colombiano"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            app:layout_constraintTop_toBottomOf="@id/imageView3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

@@ -39,6 +39,7 @@
             android:layout_height="wrap_content"
             android:text="Buscar"
             android:layout_gravity="end"
+            android:backgroundTint="#8A6120"
             android:layout_marginBottom="16dp" />
 
         <LinearLayout

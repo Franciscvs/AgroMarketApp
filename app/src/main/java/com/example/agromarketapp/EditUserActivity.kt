@@ -4,127 +4,63 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 
 class EditUserActivity : AppCompatActivity() {
 
-    private lateinit var prefs: android.content.SharedPreferences
-    private lateinit var usuarioActual: String
-    private var uriImagen: Uri? = null
-    private lateinit var imageView: ImageView
+    private val REQUEST_IMAGE_PICK = 1
+    private lateinit var imageViewUsuario: ImageView
+    private var imageUriSeleccionada: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_user)
 
-        prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
-        usuarioActual = prefs.getString("usuario_actual", "") ?: ""
-        imageView = findViewById(R.id.imageViewUsuario)
+        // Referencias UI
+        imageViewUsuario = findViewById(R.id.imageViewUsuario)
+        val botonSeleccionarImagen = findViewById<Button>(R.id.buttonSeleccionarImagen)
+        val botonGuardar = findViewById<Button>(R.id.buttonGuardar)
 
-        val uri = prefs.getString("imagen_${usuarioActual}", null)
-        if (!uri.isNullOrEmpty()) {
-            uriImagen = Uri.parse(uri)
-            imageView.setImageURI(uriImagen)
+        // Cargar imagen guardada (si existe)
+        val prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
+        val usuarioActual = prefs.getString("usuario_actual", null)
+        if (usuarioActual != null) {
+            val uriGuardada = prefs.getString("imagen_usuario_$usuarioActual", null)
+            if (!uriGuardada.isNullOrEmpty()) {
+                imageViewUsuario.setImageURI(Uri.parse(uriGuardada))
+            }
         }
 
-        val usuarios = prefs.getString("usuarios", null)?.split(";")?.map {
-            val campos = it.split("|")
-            Usuario(campos[0], campos[1], campos[2], campos[3], campos[4])
-        }?.toMutableList() ?: mutableListOf()
-
-        val usuario = usuarios.find { it.usuario == usuarioActual }
-
-        val editUsuario = findViewById<EditText>(R.id.editTextUsuario)
-        val editNombres = findViewById<EditText>(R.id.editTextNombres)
-        val editApellidos = findViewById<EditText>(R.id.editTextApellidos)
-        val editCorreo = findViewById<EditText>(R.id.editTextCorreo)
-        val editContrasena = findViewById<EditText>(R.id.editTextPasswordConfirm)
-
-        usuario?.let {
-            editUsuario.setText(it.usuario)
-            editNombres.setText(it.nombres)
-            editApellidos.setText(it.apellidos)
-            editCorreo.setText(it.correo)
-            editContrasena.setText(it.contrasena)
-        }
-
-        findViewById<Button>(R.id.buttonSeleccionarImagen).setOnClickListener {
+        // Selección de imagen
+        botonSeleccionarImagen.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
-            startActivityForResult(intent, 111)
+            startActivityForResult(intent, REQUEST_IMAGE_PICK)
         }
 
-        findViewById<Button>(R.id.buttonGuardar).setOnClickListener {
-            val nuevoUsuario = editUsuario.text.toString().trim()
-            val nuevosDatos = Usuario(
-                nuevoUsuario,
-                editNombres.text.toString().trim(),
-                editApellidos.text.toString().trim(),
-                editCorreo.text.toString().trim(),
-                editContrasena.text.toString().trim()
-            )
-
-            val actualizados = usuarios.map {
-                if (it.usuario == usuarioActual) nuevosDatos else it
+        // Guardar datos (imagen incluida)
+        botonGuardar.setOnClickListener {
+            val editor = prefs.edit()
+            if (usuarioActual != null && imageUriSeleccionada != null) {
+                editor.putString("imagen_usuario_$usuarioActual", imageUriSeleccionada.toString())
             }
-
-            val nuevoString = actualizados.joinToString(";") {
-                "${it.usuario}|${it.nombres}|${it.apellidos}|${it.correo}|${it.contrasena}"
-            }
-
-            // Guardar nuevos datos
-            prefs.edit().putString("usuarios", nuevoString).apply()
-
-            // Si se cambió el nombre del usuario, también actualizar imagen y sesión
-            if (nuevoUsuario != usuarioActual) {
-                val imagenUri = prefs.getString("imagen_${usuarioActual}", null)
-                prefs.edit().remove("imagen_${usuarioActual}").apply()
-                imagenUri?.let {
-                    prefs.edit().putString("imagen_${nuevoUsuario}", it).apply()
-                }
-                prefs.edit().putString("usuario_actual", nuevoUsuario).apply()
-            }
-
-            uriImagen?.let {
-                prefs.edit().putString("imagen_${nuevoUsuario}", it.toString()).apply()
-            }
-
-            Toast.makeText(this, "Datos actualizados correctamente", Toast.LENGTH_SHORT).show()
-            setResult(Activity.RESULT_OK)
-            finish()
-        }
-
-        findViewById<Button>(R.id.buttonVolver).setOnClickListener {
-            finish()
-        }
-
-        findViewById<Button>(R.id.buttonCerrarSesion).setOnClickListener {
-            prefs.edit().remove("usuario_actual").apply()
-            startActivity(Intent(this, LoginActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            })
+            // Aquí también deberías guardar otros campos si los estás editando
+            editor.apply()
+            finish() // vuelve atrás después de guardar
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 111 && resultCode == RESULT_OK) {
-            uriImagen = data?.data
-            imageView.setImageURI(uriImagen)
-
-            uriImagen?.let {
-                try {
-                    contentResolver.takePersistableUriPermission(
-                        it,
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    )
-                } catch (e: SecurityException) {
-                    e.printStackTrace()
-                }
+        if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK) {
+            val uri = data?.data
+            if (uri != null) {
+                imageUriSeleccionada = uri
+                imageViewUsuario.setImageURI(uri)
             }
-
-
         }
     }
 }

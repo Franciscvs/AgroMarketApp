@@ -5,60 +5,73 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class ViewUserActivity : AppCompatActivity() {
 
-    private lateinit var prefs: android.content.SharedPreferences
-    private lateinit var usuarioSeleccionado: String
+    private lateinit var imageViewUsuario: ImageView
+    private lateinit var textUsuario: TextView
+    private lateinit var textNombres: TextView
+    private lateinit var textApellidos: TextView
+    private lateinit var textCorreo: TextView
+    private lateinit var textContrasena: TextView
+    private lateinit var buttonVerTienda: Button
+    private lateinit var buttonVolver: Button
+    private lateinit var buttonCerrarSesion: Button
+
+    private lateinit var usuarioPropietario: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_user)
 
-        prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
-        usuarioSeleccionado = intent.getStringExtra("usuarioSeleccionado") ?: ""
+        imageViewUsuario = findViewById(R.id.imageViewUsuario)
+        textUsuario = findViewById(R.id.textUsuario)
+        textNombres = findViewById(R.id.textNombres)
+        textApellidos = findViewById(R.id.textApellidos)
+        textCorreo = findViewById(R.id.textCorreo)
+        textContrasena = findViewById(R.id.textContrasena)
+        buttonVerTienda = findViewById(R.id.buttonVerTienda)
+        buttonVolver = findViewById(R.id.buttonVolver)
+        buttonCerrarSesion = findViewById(R.id.buttonCerrarSesion)
 
-        val usuarios = prefs.getString("usuarios", null)?.split(";")?.map {
-            val campos = it.split("|")
-            Usuario(campos[0], campos[1], campos[2], campos[3], campos[4])
-        } ?: emptyList()
+        val prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
+        usuarioPropietario = intent.getStringExtra("usuario_propietario") ?: return
 
-        val encontrado = usuarios.find { it.usuario == usuarioSeleccionado }
+        // Cargar lista de usuarios
+        val listaUsuarios = Usuario.cargarUsuariosDesdePrefs(prefs)
+        val usuario = listaUsuarios.find { it.usuario == usuarioPropietario }
 
-        if (encontrado != null) {
-            findViewById<TextView>(R.id.textUsuario).text = "Usuario: ${encontrado.usuario}"
-            findViewById<TextView>(R.id.textNombres).text = "Nombres: ${encontrado.nombres}"
-            findViewById<TextView>(R.id.textApellidos).text = "Apellidos: ${encontrado.apellidos}"
-            findViewById<TextView>(R.id.textCorreo).text = "Correo: ${encontrado.correo}"
-            findViewById<TextView>(R.id.textContrasena).text = "Contraseña: ${encontrado.contrasena}"
+        usuario?.let {
+            textUsuario.text = "Usuario: ${it.usuario}"
+            textNombres.text = "Nombres: ${it.nombres}"
+            textApellidos.text = "Apellidos: ${it.apellidos}"
+            textCorreo.text = "Correo: ${it.correo}"
+            textContrasena.text = "Contraseña: ${it.contrasena}"
 
-            val uri = prefs.getString("imagen_${encontrado.usuario}", null)
-            if (!uri.isNullOrEmpty()) {
-                try {
-                    findViewById<ImageView>(R.id.imageViewUsuario).setImageURI(Uri.parse(uri))
-                } catch (e: Exception) {
-                    Toast.makeText(this, "Error al cargar imagen de usuario", Toast.LENGTH_SHORT).show()
-                }
+            // Cargar imagen del usuario
+            val uriStr = prefs.getString("imagen_usuario_${it.usuario}", null)
+            if (!uriStr.isNullOrEmpty()) {
+                imageViewUsuario.setImageURI(Uri.parse(uriStr))
             }
-
-            findViewById<Button>(R.id.buttonVerTienda).setOnClickListener {
-                val intent = Intent(this, ViewStoreActivity::class.java)
-                intent.putExtra("usuario", encontrado.usuario)
-                startActivity(intent)
-            }
-        } else {
-            Toast.makeText(this, "No se encontró el usuario.", Toast.LENGTH_SHORT).show()
         }
 
-        findViewById<Button>(R.id.buttonVolver).setOnClickListener {
+        // Ir a la tienda del usuario propietario
+        buttonVerTienda.setOnClickListener {
+            val intent = Intent(this, ViewStoreActivity::class.java)
+            intent.putExtra("usuario_propietario", usuarioPropietario)
+            startActivity(intent)
+        }
+
+        buttonVolver.setOnClickListener {
             finish()
         }
 
-        findViewById<Button>(R.id.buttonCerrarSesion).setOnClickListener {
+        buttonCerrarSesion.setOnClickListener {
             prefs.edit().remove("usuario_actual").apply()
-            startActivity(Intent(this, LoginActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            })
+            startActivity(Intent(this, LoginActivity::class.java))
+            finishAffinity()
         }
     }
 }

@@ -1,106 +1,108 @@
 package com.example.agromarketapp
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
 
 class EditStoreActivity : AppCompatActivity() {
 
-    private lateinit var prefs: android.content.SharedPreferences
+    private val REQUEST_IMAGE_PICK = 1
+    private lateinit var imageViewTienda: ImageView
+    private var imageUriSeleccionada: Uri? = null
+
+    private lateinit var editNombre: EditText
+    private lateinit var editDescripcion: EditText
+    private lateinit var editUbicacion: EditText
+    private lateinit var editHorario: EditText
+    private lateinit var editContacto: EditText
+    private lateinit var editCategoria: EditText
+
+    private lateinit var buttonGuardar: Button
+    private lateinit var buttonSeleccionarImagen: Button
+
     private lateinit var usuarioActual: String
-    private var uriImagen: Uri? = null
-    private lateinit var imageView: ImageView
+    private lateinit var prefs: android.content.SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_store)
 
-        prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
-        usuarioActual = prefs.getString("usuario_actual", "") ?: ""
-        imageView = findViewById(R.id.imageViewTienda)
+        // Referencias UI
+        imageViewTienda = findViewById(R.id.imageViewTienda)
+        editNombre = findViewById(R.id.editTextNombreTienda)
+        editDescripcion = findViewById(R.id.editTextDescripcionTienda)
+        editUbicacion = findViewById(R.id.editTextUbicacion)
+        editHorario = findViewById(R.id.editTextHorario)
+        editContacto = findViewById(R.id.editTextContacto)
+        editCategoria = findViewById(R.id.editTextCategoria)
 
-        val uri = prefs.getString("imagen_tienda_$usuarioActual", null)
-        if (!uri.isNullOrEmpty()) {
-            uriImagen = Uri.parse(uri)
-            imageView.setImageURI(uriImagen)
+        buttonGuardar = findViewById(R.id.buttonGuardarTienda)
+        buttonSeleccionarImagen = findViewById(R.id.buttonSeleccionarImagenTienda)
+
+        prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
+        usuarioActual = prefs.getString("usuario_actual", null) ?: ""
+
+        // Cargar tienda existente si existe
+        val tiendaJson = prefs.getString("tienda_$usuarioActual", null)
+        tiendaJson?.let {
+            val tienda = Gson().fromJson(it, Tienda::class.java)
+            editNombre.setText(tienda.nombre)
+            editDescripcion.setText(tienda.descripcion)
+            editUbicacion.setText(tienda.ubicacion)
+            editHorario.setText(tienda.horario)
+            editContacto.setText(tienda.contacto)
+            editCategoria.setText(tienda.categoria)
         }
 
-        val tiendaStr = prefs.getString("tienda_$usuarioActual", null)
-        val campos = tiendaStr?.split("|") ?: listOf("", "", "", "", "", "")
+        // Cargar imagen guardada
+        val uriStr = prefs.getString("imagen_tienda_$usuarioActual", null)
+        if (!uriStr.isNullOrEmpty()) {
+            imageViewTienda.setImageURI(Uri.parse(uriStr))
+        }
 
-        val editNombre = findViewById<EditText>(R.id.editTextNombreTienda)
-        val editDescripcion = findViewById<EditText>(R.id.editTextDescripcionTienda)
-        val editUbicacion = findViewById<EditText>(R.id.editTextUbicacion)
-        val editHorario = findViewById<EditText>(R.id.editTextHorario)
-        val editContacto = findViewById<EditText>(R.id.editTextContacto)
-        val editCategoria = findViewById<EditText>(R.id.editTextCategoria)
-
-        editNombre.setText(campos.getOrNull(0) ?: "")
-        editDescripcion.setText(campos.getOrNull(1) ?: "")
-        editUbicacion.setText(campos.getOrNull(2) ?: "")
-        editHorario.setText(campos.getOrNull(3) ?: "")
-        editContacto.setText(campos.getOrNull(4) ?: "")
-        editCategoria.setText(campos.getOrNull(5) ?: "")
-
-        findViewById<Button>(R.id.buttonSeleccionarImagenTienda).setOnClickListener {
+        // Selección de imagen
+        buttonSeleccionarImagen.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
-            startActivityForResult(intent, 109)
+            startActivityForResult(intent, REQUEST_IMAGE_PICK)
         }
 
-        findViewById<Button>(R.id.buttonGuardarTienda).setOnClickListener {
-            val nuevaTienda = listOf(
-                editNombre.text.toString().trim(),
-                editDescripcion.text.toString().trim(),
-                editUbicacion.text.toString().trim(),
-                editHorario.text.toString().trim(),
-                editContacto.text.toString().trim(),
-                editCategoria.text.toString().trim()
-            ).joinToString("|")
+        // Guardar tienda
+        buttonGuardar.setOnClickListener {
+            val tienda = Tienda(
+                nombre = editNombre.text.toString(),
+                descripcion = editDescripcion.text.toString(),
+                ubicacion = editUbicacion.text.toString(),
+                horario = editHorario.text.toString(),
+                contacto = editContacto.text.toString(),
+                categoria = editCategoria.text.toString()
+            )
 
-            prefs.edit().putString("tienda_$usuarioActual", nuevaTienda).apply()
+            val editor = prefs.edit()
+            editor.putString("tienda_$usuarioActual", Gson().toJson(tienda))
 
-            uriImagen?.let {
-                prefs.edit().putString("imagen_tienda_$usuarioActual", it.toString()).apply()
+            // Guardar imagen si hay nueva
+            imageUriSeleccionada?.let {
+                editor.putString("imagen_tienda_$usuarioActual", it.toString())
             }
 
-            Toast.makeText(this, "Tienda actualizada correctamente", Toast.LENGTH_SHORT).show()
-            setResult(RESULT_OK)
+            editor.apply()
             finish()
-        }
-
-        findViewById<Button>(R.id.buttonVolver).setOnClickListener {
-            finish()
-        }
-
-        findViewById<Button>(R.id.buttonCerrarSesion).setOnClickListener {
-            prefs.edit().remove("usuario_actual").apply()
-            startActivity(Intent(this, LoginActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            })
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 109 && resultCode == RESULT_OK) {
-            uriImagen = data?.data
-            imageView.setImageURI(uriImagen)
-
-            uriImagen?.let {
-                try {
-                    contentResolver.takePersistableUriPermission(
-                        it,
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    )
-                } catch (e: SecurityException) {
-                    e.printStackTrace()
-                }
+        if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK) {
+            val uri = data?.data
+            if (uri != null) {
+                imageUriSeleccionada = uri
+                imageViewTienda.setImageURI(uri)
             }
-
-
         }
     }
 }

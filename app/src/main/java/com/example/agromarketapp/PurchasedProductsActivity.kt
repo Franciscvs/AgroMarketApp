@@ -3,88 +3,88 @@ package com.example.agromarketapp
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.Gravity
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.setPadding
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class PurchasedProductsActivity : AppCompatActivity() {
 
-    private lateinit var prefs: android.content.SharedPreferences
-    private lateinit var usuarioActual: String
-    private lateinit var contenedor: LinearLayout
+    private lateinit var contenedorCompras: LinearLayout
+    private lateinit var buttonVolver: Button
+    private lateinit var buttonCerrarSesion: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_purchased_products)
 
-        prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
-        usuarioActual = prefs.getString("usuario_actual", "") ?: ""
-        contenedor = findViewById(R.id.contenedorCompras)
+        contenedorCompras = findViewById(R.id.contenedorCompras)
+        buttonVolver = findViewById(R.id.buttonVolver)
+        buttonCerrarSesion = findViewById(R.id.buttonCerrarSesion)
 
-        if (intent.getBooleanExtra("compra_confirmada", false)) {
-            Toast.makeText(this, "¡Gracias por tu compra!", Toast.LENGTH_LONG).show()
+        val prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
+        val usuarioActual = prefs.getString("usuario_actual", null)
+
+        // Mostrar mensaje si se acaba de realizar una compra
+        if (intent.getBooleanExtra("compra_realizada", false)) {
+            val mensaje = TextView(this)
+            mensaje.text = "¡Gracias por tu compra!"
+            mensaje.textSize = 20f
+            mensaje.setTextColor(resources.getColor(android.R.color.holo_green_dark))
+            mensaje.gravity = Gravity.CENTER
+            contenedorCompras.addView(mensaje)
         }
 
-        val comprasStr = prefs.getString("compras_$usuarioActual", null)
-        val compras = comprasStr?.split(";;")?.map {
-            val campos = it.split("||")
-            Producto(
-                campos.getOrElse(0) { "" },
-                campos.getOrElse(1) { "" },
-                campos.getOrElse(2) { "0.0" }.toDoubleOrNull() ?: 0.0,
-                campos.getOrElse(3) { "" },
-                campos.getOrElse(4) { "" },
-                campos.getOrElse(5) { "" },
-                campos.getOrElse(6) { "" },
-                campos.getOrElse(7) { "" }
-            ) to campos.getOrElse(8) { "" }
-        } ?: emptyList()
+        // Cargar productos comprados
+        if (usuarioActual != null) {
+            val comprasJson = prefs.getString("productos_comprados_$usuarioActual", null)
+            val tipoLista = object : TypeToken<MutableList<Producto>>() {}.type
+            val productos = if (comprasJson != null)
+                Gson().fromJson<MutableList<Producto>>(comprasJson, tipoLista)
+            else mutableListOf()
 
-        contenedor.removeAllViews()
+            for (producto in productos) {
+                val layoutProducto = LinearLayout(this).apply {
+                    orientation = LinearLayout.VERTICAL
+                    setPadding(0, 16, 0, 16)
+                }
 
-        compras.forEachIndexed { index, (producto, uri) ->
-            val layout = LinearLayout(this)
-            layout.orientation = LinearLayout.VERTICAL
-            layout.setPadding(16)
+                // Imagen del producto
+                val imageView = ImageView(this).apply {
+                    layoutParams = LinearLayout.LayoutParams(200, 200).apply {
+                        gravity = Gravity.CENTER
+                    }
+                    val uriStr = prefs.getString("imagen_producto_${usuarioActual}_${producto.nombre}", null)
+                    if (!uriStr.isNullOrEmpty()) {
+                        setImageURI(Uri.parse(uriStr))
+                    } else {
+                        setImageResource(R.drawable.imagen_producto) // imagen por defecto
+                    }
+                }
 
-            val nombre = TextView(this)
-            nombre.text = "${producto.nombre} - $${producto.precio}"
-            nombre.textSize = 18f
-            layout.addView(nombre)
+                // Texto con nombre y precio
+                val texto = TextView(this).apply {
+                    text = "${producto.nombre} - ${producto.precio}"
+                    textSize = 18f
+                    gravity = Gravity.CENTER
+                }
 
-            if (uri.isNotEmpty()) {
-                val image = ImageView(this)
-                image.setImageURI(Uri.parse(uri))
-                image.layoutParams = LinearLayout.LayoutParams(300, 300)
-                layout.addView(image)
+                layoutProducto.addView(imageView)
+                layoutProducto.addView(texto)
+
+                contenedorCompras.addView(layoutProducto)
             }
-
-            layout.setOnClickListener {
-                val intent = Intent(this, ViewProductActivity::class.java)
-                intent.putExtra("nombre", producto.nombre)
-                intent.putExtra("descripcion", producto.descripcion)
-                intent.putExtra("precio", producto.precio)
-                intent.putExtra("tipoCultivo", producto.tipoCultivo)
-                intent.putExtra("unidadVenta", producto.unidadVenta)
-                intent.putExtra("fechaCosecha", producto.fechaCosecha)
-                intent.putExtra("certificacion", producto.certificacion)
-                intent.putExtra("regionOrigen", producto.regionOrigen)
-                intent.putExtra("imagenUri", uri)
-                startActivity(intent)
-            }
-
-            contenedor.addView(layout)
         }
 
-        findViewById<Button>(R.id.buttonVolver).setOnClickListener {
+        buttonVolver.setOnClickListener {
             finish()
         }
 
-        findViewById<Button>(R.id.buttonCerrarSesion).setOnClickListener {
+        buttonCerrarSesion.setOnClickListener {
             prefs.edit().remove("usuario_actual").apply()
-            startActivity(Intent(this, LoginActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            })
+            startActivity(Intent(this, LoginActivity::class.java))
+            finishAffinity()
         }
     }
 }

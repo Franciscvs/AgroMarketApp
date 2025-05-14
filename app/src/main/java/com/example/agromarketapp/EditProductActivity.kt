@@ -6,120 +6,141 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class EditProductActivity : AppCompatActivity() {
 
-    private lateinit var prefs: android.content.SharedPreferences
-    private lateinit var usuarioActual: String
-    private var productoIndex: Int = -1
-    private var uriImagen: Uri? = null
-    private lateinit var imageView: ImageView
+    private val REQUEST_IMAGE_PICK = 1
+    private lateinit var imageViewProducto: ImageView
+    private var imageUriSeleccionada: Uri? = null
+
+    private lateinit var editNombre: EditText
+    private lateinit var editDescripcion: EditText
+    private lateinit var editPrecio: EditText
+    private lateinit var editTipoCultivo: EditText
+    private lateinit var editUnidadVenta: EditText
+    private lateinit var editFechaCosecha: EditText
+    private lateinit var editCertificacion: EditText
+    private lateinit var editRegionOrigen: EditText
+
+    private lateinit var botonGuardar: Button
+    private lateinit var botonSeleccionarImagen: Button
+
+    private var nombreOriginal: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_product)
 
-        prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
-        usuarioActual = prefs.getString("usuario_actual", "") ?: ""
-        productoIndex = intent.getIntExtra("productoIndex", -1)
+        // Referencias UI
+        imageViewProducto = findViewById(R.id.imageViewProducto)
+        editNombre = findViewById(R.id.editTextNombreProducto)
+        editDescripcion = findViewById(R.id.editTextDescripcionProducto)
+        editPrecio = findViewById(R.id.editTextPrecioProducto)
+        editTipoCultivo = findViewById(R.id.editTextTipoCultivo)
+        editUnidadVenta = findViewById(R.id.editTextUnidadVenta)
+        editFechaCosecha = findViewById(R.id.editTextFechaCosecha)
+        editCertificacion = findViewById(R.id.editTextCertificacion)
+        editRegionOrigen = findViewById(R.id.editTextRegionOrigen)
 
-        imageView = findViewById(R.id.imageViewProducto)
+        botonGuardar = findViewById(R.id.buttonGuardarProducto)
+        botonSeleccionarImagen = findViewById(R.id.buttonSeleccionarImagenProducto)
 
-        val uri = prefs.getString("imagen_producto_${usuarioActual}_$productoIndex", null)
-        if (!uri.isNullOrEmpty()) {
-            uriImagen = Uri.parse(uri)
-            imageView.setImageURI(uriImagen)
+        val prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
+        val usuarioActual = prefs.getString("usuario_actual", null)
+
+        // Cargar producto recibido
+        val productoJson = intent.getStringExtra("producto_editar")
+        val producto = if (!productoJson.isNullOrEmpty())
+            Gson().fromJson(productoJson, Producto::class.java)
+        else null
+
+        producto?.let {
+            nombreOriginal = it.nombre
+            editNombre.setText(it.nombre)
+            editDescripcion.setText(it.descripcion)
+            editPrecio.setText(it.precio)
+            editTipoCultivo.setText(it.tipoCultivo)
+            editUnidadVenta.setText(it.unidadVenta)
+            editFechaCosecha.setText(it.fechaCosecha)
+            editCertificacion.setText(it.certificacion)
+            editRegionOrigen.setText(it.regionOrigen)
+
+            if (!usuarioActual.isNullOrEmpty()) {
+                val uriStr = prefs.getString("imagen_producto_${usuarioActual}_${it.nombre}", null)
+                if (!uriStr.isNullOrEmpty()) {
+                    imageViewProducto.setImageURI(Uri.parse(uriStr))
+                }
+            }
         }
 
-        val productosStr = prefs.getString("productos_$usuarioActual", null)
-        val productos = productosStr?.split(";")?.toMutableList() ?: mutableListOf()
-
-        val productoCampos = productos.getOrNull(productoIndex)?.split("|") ?: listOf("", "", "", "", "", "", "", "")
-
-        val editNombre = findViewById<EditText>(R.id.editTextNombreProducto)
-        val editDescripcion = findViewById<EditText>(R.id.editTextDescripcionProducto)
-        val editPrecio = findViewById<EditText>(R.id.editTextPrecioProducto)
-        val editTipoCultivo = findViewById<EditText>(R.id.editTextTipoCultivo)
-        val editUnidadVenta = findViewById<EditText>(R.id.editTextUnidadVenta)
-        val editFechaCosecha = findViewById<EditText>(R.id.editTextFechaCosecha)
-        val editCertificacion = findViewById<EditText>(R.id.editTextCertificacion)
-        val editRegion = findViewById<EditText>(R.id.editTextRegionOrigen)
-
-        editNombre.setText(productoCampos.getOrNull(0) ?: "")
-        editDescripcion.setText(productoCampos.getOrNull(1) ?: "")
-        editPrecio.setText(productoCampos.getOrNull(2) ?: "")
-        editTipoCultivo.setText(productoCampos.getOrNull(3) ?: "")
-        editUnidadVenta.setText(productoCampos.getOrNull(4) ?: "")
-        editFechaCosecha.setText(productoCampos.getOrNull(5) ?: "")
-        editCertificacion.setText(productoCampos.getOrNull(6) ?: "")
-        editRegion.setText(productoCampos.getOrNull(7) ?: "")
-
-        findViewById<Button>(R.id.buttonSeleccionarImagenProducto).setOnClickListener {
+        botonSeleccionarImagen.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
-            startActivityForResult(intent, 110)
+            startActivityForResult(intent, REQUEST_IMAGE_PICK)
         }
 
-        findViewById<Button>(R.id.buttonGuardarProducto).setOnClickListener {
-            val nuevoProducto = listOf(
-                editNombre.text.toString().trim(),
-                editDescripcion.text.toString().trim(),
-                editPrecio.text.toString().trim(),
-                editTipoCultivo.text.toString().trim(),
-                editUnidadVenta.text.toString().trim(),
-                editFechaCosecha.text.toString().trim(),
-                editCertificacion.text.toString().trim(),
-                editRegion.text.toString().trim()
-            ).joinToString("|")
+        botonGuardar.setOnClickListener {
+            val nuevoNombre = editNombre.text.toString().trim()
 
-            if (productoIndex >= 0 && productoIndex < productos.size) {
-                productos[productoIndex] = nuevoProducto
+            if (usuarioActual != null && nuevoNombre.isNotEmpty()) {
+                val nuevaImagenUri = imageUriSeleccionada?.toString()
+
+                // Guardar nueva imagen si fue seleccionada
+                if (nuevaImagenUri != null) {
+                    prefs.edit().putString("imagen_producto_${usuarioActual}_$nuevoNombre", nuevaImagenUri).apply()
+                    if (nuevoNombre != nombreOriginal) {
+                        prefs.edit().remove("imagen_producto_${usuarioActual}_$nombreOriginal").apply()
+                    }
+                } else if (nuevoNombre != nombreOriginal) {
+                    // Mover imagen existente a la nueva clave
+                    val antiguaUri = prefs.getString("imagen_producto_${usuarioActual}_$nombreOriginal", null)
+                    if (!antiguaUri.isNullOrEmpty()) {
+                        prefs.edit().putString("imagen_producto_${usuarioActual}_$nuevoNombre", antiguaUri).apply()
+                        prefs.edit().remove("imagen_producto_${usuarioActual}_$nombreOriginal").apply()
+                    }
+                }
+
+                // Crear nuevo producto con los datos ingresados
+                val nuevoProducto = Producto(
+                    nombre = nuevoNombre,
+                    descripcion = editDescripcion.text.toString(),
+                    precio = editPrecio.text.toString(),
+                    tipoCultivo = editTipoCultivo.text.toString(),
+                    unidadVenta = editUnidadVenta.text.toString(),
+                    fechaCosecha = editFechaCosecha.text.toString(),
+                    certificacion = editCertificacion.text.toString(),
+                    regionOrigen = editRegionOrigen.text.toString()
+                )
+
+                // Actualizar la lista de productos
+                val productos = Producto.cargarProductosDesdePrefs(prefs, usuarioActual)
+                val index = productos.indexOfFirst { it.nombre == nombreOriginal }
+
+                if (index != -1) {
+                    productos[index] = nuevoProducto
+                } else {
+                    productos.add(nuevoProducto)
+                }
+
+                Producto.guardarProductosEnPrefs(prefs, usuarioActual, productos)
+
+                finish()
             } else {
-                productos.add(nuevoProducto)
+                Toast.makeText(this, "El nombre no puede estar vacío", Toast.LENGTH_SHORT).show()
             }
-
-            prefs.edit().putString("productos_$usuarioActual", productos.joinToString(";")).apply()
-
-            uriImagen?.let {
-                prefs.edit().putString("imagen_producto_${usuarioActual}_$productoIndex", it.toString()).apply()
-            }
-
-
-            Toast.makeText(this, "Producto guardado correctamente", Toast.LENGTH_SHORT).show()
-            setResult(Activity.RESULT_OK)
-            finish()
-        }
-
-        findViewById<Button>(R.id.buttonVolver).setOnClickListener {
-            finish()
-        }
-
-        findViewById<Button>(R.id.buttonCerrarSesion).setOnClickListener {
-            prefs.edit().remove("usuario_actual").apply()
-            startActivity(Intent(this, LoginActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            })
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 110 && resultCode == RESULT_OK) {
-            uriImagen = data?.data
-            imageView.setImageURI(uriImagen)
-
-            uriImagen?.let {
-                try {
-                    contentResolver.takePersistableUriPermission(
-                        it,
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    )
-                } catch (e: SecurityException) {
-                    e.printStackTrace()
-                }
+        if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK) {
+            val uri = data?.data
+            if (uri != null) {
+                imageUriSeleccionada = uri
+                imageViewProducto.setImageURI(uri)
             }
-
-
         }
     }
 }

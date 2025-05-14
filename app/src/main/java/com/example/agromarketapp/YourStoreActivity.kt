@@ -5,118 +5,135 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.setPadding
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class YourStoreActivity : AppCompatActivity() {
 
-    private lateinit var prefs: android.content.SharedPreferences
-    private lateinit var usuarioActual: String
+    private lateinit var imageViewTienda: ImageView
+    private lateinit var textNombre: TextView
+    private lateinit var textDescripcion: TextView
+    private lateinit var textUbicacion: TextView
+    private lateinit var textHorario: TextView
+    private lateinit var textContacto: TextView
+    private lateinit var textCategoria: TextView
     private lateinit var contenedorProductos: LinearLayout
+
+    private lateinit var buttonEditarTienda: Button
+    private lateinit var buttonAgregarProducto: Button
+    private lateinit var buttonVolver: Button
+    private lateinit var buttonCerrarSesion: Button
+
+    private lateinit var usuarioActual: String
+    private lateinit var prefs: android.content.SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_your_store)
 
+        // Referencias UI
+        imageViewTienda = findViewById(R.id.imageViewTienda)
+        textNombre = findViewById(R.id.textNombreTienda)
+        textDescripcion = findViewById(R.id.textDescripcionTienda)
+        textUbicacion = findViewById(R.id.textUbicacion)
+        textHorario = findViewById(R.id.textHorario)
+        textContacto = findViewById(R.id.textContacto)
+        textCategoria = findViewById(R.id.textCategoria)
+        contenedorProductos = findViewById(R.id.contenedorProductos)
+
+        buttonEditarTienda = findViewById(R.id.buttonEditarTienda)
+        buttonAgregarProducto = findViewById(R.id.buttonAgregarProducto)
+        buttonVolver = findViewById(R.id.buttonVolver)
+        buttonCerrarSesion = findViewById(R.id.buttonCerrarSesion)
+
         prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
         usuarioActual = prefs.getString("usuario_actual", "") ?: ""
 
-        contenedorProductos = findViewById(R.id.contenedorProductos)
-        val imageViewTienda = findViewById<ImageView>(R.id.imageViewTienda)
-
-        // Mostrar datos de tienda
-        val tiendaStr = prefs.getString("tienda_$usuarioActual", null)
-        val campos = tiendaStr?.split("|") ?: listOf("", "", "", "", "", "")
-
-        findViewById<TextView>(R.id.textNombreTienda).text = campos.getOrNull(0) ?: ""
-        findViewById<TextView>(R.id.textDescripcionTienda).text = campos.getOrNull(1) ?: ""
-        findViewById<TextView>(R.id.textUbicacion).text = "Ubicación: ${campos.getOrNull(2) ?: ""}"
-        findViewById<TextView>(R.id.textHorario).text = "Horario: ${campos.getOrNull(3) ?: ""}"
-        findViewById<TextView>(R.id.textContacto).text = "Contacto: ${campos.getOrNull(4) ?: ""}"
-        findViewById<TextView>(R.id.textCategoria).text = "Categoría: ${campos.getOrNull(5) ?: ""}"
-
-        val uri = prefs.getString("imagen_tienda_$usuarioActual", null)
-        if (!uri.isNullOrEmpty()) {
-            imageViewTienda.setImageURI(Uri.parse(uri))
+        // Cargar info tienda
+        val tiendaJson = prefs.getString("tienda_$usuarioActual", null)
+        tiendaJson?.let {
+            val tienda = Gson().fromJson(it, Tienda::class.java)
+            textNombre.text = tienda.nombre
+            textDescripcion.text = tienda.descripcion
+            textUbicacion.text = "Ubicación: ${tienda.ubicacion}"
+            textHorario.text = "Horario: ${tienda.horario}"
+            textContacto.text = "Contacto: ${tienda.contacto}"
+            textCategoria.text = "Categoría: ${tienda.categoria}"
         }
 
-        // Cargar productos propios
-        val productosStr = prefs.getString("productos_$usuarioActual", null)
-        val productos = productosStr?.split(";")?.map {
-            val campos = it.split("|")
-            Producto(
-                campos.getOrElse(0) { "" },
-                campos.getOrElse(1) { "" },
-                campos.getOrElse(2) { "0.0" }.toDoubleOrNull() ?: 0.0,
-                campos.getOrElse(3) { "" },
-                campos.getOrElse(4) { "" },
-                campos.getOrElse(5) { "" },
-                campos.getOrElse(6) { "" },
-                campos.getOrElse(7) { "" }
-            )
-        } ?: emptyList()
+        // Imagen de la tienda
+        val uriTienda = prefs.getString("imagen_tienda_$usuarioActual", null)
+        if (!uriTienda.isNullOrEmpty()) {
+            imageViewTienda.setImageURI(Uri.parse(uriTienda))
+        }
 
+        // Cargar productos del usuario
+        val productos = Producto.cargarProductosDesdePrefs(prefs, usuarioActual)
         contenedorProductos.removeAllViews()
 
-        productos.forEachIndexed { index, producto ->
-            val layout = LinearLayout(this)
-            layout.orientation = LinearLayout.VERTICAL
-            layout.setPadding(16)
-
-            val nombre = TextView(this)
-            nombre.text = "${producto.nombre} - $${producto.precio}"
-            nombre.textSize = 18f
-            layout.addView(nombre)
-
-            val uriProd = prefs.getString("imagen_producto_${usuarioActual}_$index", null)
-            if (!uriProd.isNullOrEmpty()) {
-                val image = ImageView(this)
-                image.setImageURI(Uri.parse(uriProd))
-                image.layoutParams = LinearLayout.LayoutParams(300, 300)
-                layout.addView(image)
+        for (producto in productos) {
+            val layout = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                setPadding(16, 16, 16, 16)
             }
 
-            layout.setOnClickListener {
-                val intent = Intent(this, EditProductActivity::class.java)
-                intent.putExtra("indice", index)
-                startActivityForResult(intent, 202)
+            val image = ImageView(this).apply {
+                layoutParams = LinearLayout.LayoutParams(300, 300)
+                val uri = prefs.getString("imagen_producto_${usuarioActual}_${producto.nombre}", null)
+                if (!uri.isNullOrEmpty()) {
+                    setImageURI(Uri.parse(uri))
+                } else {
+                    setImageResource(R.drawable.imagen_producto) // por defecto
+                }
             }
+
+            val texto = TextView(this).apply {
+                text = "${producto.nombre} - ${producto.precio}"
+                textSize = 18f
+            }
+
+            val botonVer = Button(this).apply {
+                text = "Ver"
+                setOnClickListener {
+                    val intent = Intent(this@YourStoreActivity, ViewProductActivity::class.java)
+                    intent.putExtra("producto", Gson().toJson(producto))
+                    startActivity(intent)
+                }
+            }
+
+            val botonEditar = Button(this).apply {
+                text = "Editar"
+                setOnClickListener {
+                    val intent = Intent(this@YourStoreActivity, EditProductActivity::class.java)
+                    intent.putExtra("producto_editar", Gson().toJson(producto))
+                    startActivity(intent)
+                }
+            }
+
+            layout.addView(image)
+            layout.addView(texto)
+            layout.addView(botonVer)
+            layout.addView(botonEditar)
 
             contenedorProductos.addView(layout)
         }
 
-        // Botón editar tienda
-        findViewById<Button>(R.id.buttonEditarTienda).setOnClickListener {
-            startActivityForResult(Intent(this, EditStoreActivity::class.java), 201)
+        buttonEditarTienda.setOnClickListener {
+            startActivity(Intent(this, EditStoreActivity::class.java))
         }
 
-        // Botón agregar nuevo producto
-        findViewById<Button>(R.id.buttonAgregarProducto).setOnClickListener {
-            val intent = Intent(this, EditProductActivity::class.java)
-            intent.putExtra("indice", -1) // modo nuevo
-            startActivityForResult(intent, 203)
+        buttonAgregarProducto.setOnClickListener {
+            startActivity(Intent(this, EditProductActivity::class.java))
         }
 
-        findViewById<Button>(R.id.buttonVolver).setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
+        buttonVolver.setOnClickListener {
             finish()
         }
 
-        findViewById<Button>(R.id.buttonCerrarSesion).setOnClickListener {
-            cerrarSesion()
+        buttonCerrarSesion.setOnClickListener {
+            prefs.edit().remove("usuario_actual").apply()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finishAffinity()
         }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode in listOf(201, 202, 203)) {
-            recreate() // Recargar datos luego de editar tienda o productos
-        }
-    }
-
-    private fun cerrarSesion() {
-        prefs.edit().remove("usuario_actual").apply()
-        startActivity(Intent(this, LoginActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        })
     }
 }

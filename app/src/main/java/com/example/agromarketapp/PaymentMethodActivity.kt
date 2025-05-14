@@ -4,85 +4,49 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class PaymentMethodActivity : AppCompatActivity() {
 
-    private lateinit var prefs: android.content.SharedPreferences
-    private lateinit var usuarioActual: String
-
-    private lateinit var nombre: String
-    private lateinit var descripcion: String
-    private var precio: Double = 0.0
-    private lateinit var tipoCultivo: String
-    private lateinit var unidadVenta: String
-    private lateinit var fechaCosecha: String
-    private lateinit var certificacion: String
-    private lateinit var regionOrigen: String
-    private var imagenUri: String? = null
+    private lateinit var buttonConfirmar: Button
+    private lateinit var buttonVolver: Button
+    private lateinit var buttonCerrarSesion: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_method)
 
-        prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
-        usuarioActual = prefs.getString("usuario_actual", "") ?: ""
+        buttonConfirmar = findViewById(R.id.buttonConfirmar)
+        buttonVolver = findViewById(R.id.buttonVolver)
+        buttonCerrarSesion = findViewById(R.id.buttonCerrarSesion)
 
-        // Recibir datos del producto
-        nombre = intent.getStringExtra("nombre") ?: ""
-        descripcion = intent.getStringExtra("descripcion") ?: ""
-        precio = intent.getDoubleExtra("precio", 0.0)
-        tipoCultivo = intent.getStringExtra("tipoCultivo") ?: ""
-        unidadVenta = intent.getStringExtra("unidadVenta") ?: ""
-        fechaCosecha = intent.getStringExtra("fechaCosecha") ?: ""
-        certificacion = intent.getStringExtra("certificacion") ?: ""
-        regionOrigen = intent.getStringExtra("regionOrigen") ?: ""
-        imagenUri = intent.getStringExtra("imagenUri")
-
-        val radioGroup = findViewById<RadioGroup>(R.id.radioGroupMetodos)
-        val buttonConfirmar = findViewById<Button>(R.id.buttonConfirmar)
-        val buttonVolver = findViewById<Button>(R.id.buttonVolver)
-        val buttonCerrarSesion = findViewById<Button>(R.id.buttonCerrarSesion)
+        val prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
+        val usuarioActual = prefs.getString("usuario_actual", null)
+        val usuarioPropietario = intent.getStringExtra("usuario_propietario")
+        val productoJson = intent.getStringExtra("producto_comprado")
+        val producto = Gson().fromJson(productoJson, Producto::class.java)
+        val listaCompras = ArrayList<Producto>()
 
         buttonConfirmar.setOnClickListener {
-            val metodoSeleccionado = when (radioGroup.checkedRadioButtonId) {
-                R.id.radioPSE -> "PSE"
-                R.id.radioTarjeta -> "Tarjeta de crédito o débito"
-                R.id.radioBilletera -> "Billetera Digital"
-                else -> null
-            }
+            if (usuarioActual != null && producto != null) {
+                // Cargar lista de productos comprados del usuario actual
+                val comprasJson = prefs.getString("productos_comprados_$usuarioActual", null)
+                val tipoLista: java.lang.reflect.Type = object : TypeToken<MutableList<Producto>>() {}.type
+                val listaCompras: MutableList<Producto> = if (comprasJson != null)
+                    Gson().fromJson(comprasJson, tipoLista)
+                else mutableListOf()
 
-            if (metodoSeleccionado != null) {
-                // Guardar producto comprado
-                val productoString = listOf(
-                    nombre,
-                    descripcion,
-                    precio.toString(),
-                    tipoCultivo,
-                    unidadVenta,
-                    fechaCosecha,
-                    certificacion,
-                    regionOrigen,
-                    imagenUri ?: ""
-                ).joinToString("||")
+                listaCompras.add(producto)
 
-                val claveCompras = "compras_$usuarioActual"
-                val comprasPrevias = prefs.getString(claveCompras, null)
-                val nuevasCompras = if (comprasPrevias.isNullOrEmpty()) {
-                    productoString
-                } else {
-                    "$comprasPrevias;;$productoString"
-                }
-                prefs.edit().putString(claveCompras, nuevasCompras).apply()
+                // Guardar lista actualizada
+                prefs.edit().putString("productos_comprados_$usuarioActual", Gson().toJson(listaCompras)).apply()
 
-                Toast.makeText(this, "Compra confirmada con $metodoSeleccionado", Toast.LENGTH_SHORT).show()
-
-                // Redirigir a pantalla de confirmación
+                // Ir a pantalla de confirmación
                 val intent = Intent(this, PurchasedProductsActivity::class.java)
-                intent.putExtra("compra_confirmada", true)
+                intent.putExtra("compra_realizada", true)
                 startActivity(intent)
                 finish()
-            } else {
-                Toast.makeText(this, "Selecciona un método de pago", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -92,9 +56,8 @@ class PaymentMethodActivity : AppCompatActivity() {
 
         buttonCerrarSesion.setOnClickListener {
             prefs.edit().remove("usuario_actual").apply()
-            startActivity(Intent(this, BaseActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            })
+            startActivity(Intent(this, LoginActivity::class.java))
+            finishAffinity()
         }
     }
 }

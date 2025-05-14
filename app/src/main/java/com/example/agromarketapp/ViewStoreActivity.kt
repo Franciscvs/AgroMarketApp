@@ -5,103 +5,109 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.setPadding
+import com.google.gson.Gson
 
 class ViewStoreActivity : AppCompatActivity() {
 
-    private lateinit var prefs: android.content.SharedPreferences
-    private lateinit var usuario: String
-    private lateinit var contenedor: LinearLayout
+    private lateinit var imageViewTienda: ImageView
+    private lateinit var textNombreTienda: TextView
+    private lateinit var textDescripcionTienda: TextView
+    private lateinit var textUbicacion: TextView
+    private lateinit var textHorario: TextView
+    private lateinit var textContacto: TextView
+    private lateinit var textCategoria: TextView
+    private lateinit var contenedorProductos: LinearLayout
+    private lateinit var buttonVolver: Button
+    private lateinit var buttonCerrarSesion: Button
+
+    private lateinit var usuarioPropietario: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_store)
 
-        prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
-        usuario = intent.getStringExtra("usuario") ?: ""
-        contenedor = findViewById(R.id.contenedorProductos)
+        // Referencias UI
+        imageViewTienda = findViewById(R.id.imageViewTienda)
+        textNombreTienda = findViewById(R.id.textNombreTienda)
+        textDescripcionTienda = findViewById(R.id.textDescripcionTienda)
+        textUbicacion = findViewById(R.id.textUbicacion)
+        textHorario = findViewById(R.id.textHorario)
+        textContacto = findViewById(R.id.textContacto)
+        textCategoria = findViewById(R.id.textCategoria)
+        contenedorProductos = findViewById(R.id.contenedorProductos)
+        buttonVolver = findViewById(R.id.buttonVolver)
+        buttonCerrarSesion = findViewById(R.id.buttonCerrarSesion)
 
-        val tiendaStr = prefs.getString("tienda_$usuario", null)
-        val campos = tiendaStr?.split("|") ?: listOf("", "", "", "", "", "")
+        val prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
+        usuarioPropietario = intent.getStringExtra("usuario_propietario") ?: return
 
-        findViewById<TextView>(R.id.textNombreTienda).text = "Nombre: ${campos.getOrNull(0) ?: ""}"
-        findViewById<TextView>(R.id.textDescripcionTienda).text = "Descripción: ${campos.getOrNull(1) ?: ""}"
-        findViewById<TextView>(R.id.textUbicacion).text = "Ubicación: ${campos.getOrNull(2) ?: ""}"
-        findViewById<TextView>(R.id.textHorario).text = "Horario: ${campos.getOrNull(3) ?: ""}"
-        findViewById<TextView>(R.id.textContacto).text = "Contacto: ${campos.getOrNull(4) ?: ""}"
-        findViewById<TextView>(R.id.textCategoria).text = "Categoría: ${campos.getOrNull(5) ?: ""}"
-
-        val imageView = findViewById<ImageView>(R.id.imageViewTienda)
-        val uri = prefs.getString("imagen_tienda_$usuario", null)
-        if (!uri.isNullOrEmpty()) {
-            try {
-                imageView.setImageURI(Uri.parse(uri))
-            } catch (e: Exception) {
-                Toast.makeText(this, "Error al cargar la imagen de la tienda", Toast.LENGTH_SHORT).show()
-            }
+        // Cargar datos de tienda del propietario
+        val tiendaJson = prefs.getString("tienda_$usuarioPropietario", null)
+        tiendaJson?.let {
+            val tienda = Gson().fromJson(it, Tienda::class.java)
+            textNombreTienda.text = tienda.nombre
+            textDescripcionTienda.text = "Descripción de la tienda: ${tienda.descripcion}"
+            textUbicacion.text = "Ubicación: ${tienda.ubicacion}"
+            textHorario.text = "Horario: ${tienda.horario}"
+            textContacto.text = "Contacto: ${tienda.contacto}"
+            textCategoria.text = "Categoría: ${tienda.categoria}"
         }
 
-        val productosStr = prefs.getString("productos_$usuario", null)
-        val productos = productosStr?.split(";")?.map {
-            val campos = it.split("|")
-            Producto(
-                campos.getOrElse(0) { "" },
-                campos.getOrElse(1) { "" },
-                campos.getOrElse(2) { "0.0" }.toDoubleOrNull() ?: 0.0,
-                campos.getOrElse(3) { "" },
-                campos.getOrElse(4) { "" },
-                campos.getOrElse(5) { "" },
-                campos.getOrElse(6) { "" },
-                campos.getOrElse(7) { "" }
-            )
-        } ?: emptyList()
-
-        contenedor.removeAllViews()
-
-        productos.forEachIndexed { index, producto ->
-            val layout = LinearLayout(this)
-            layout.orientation = LinearLayout.VERTICAL
-            layout.setPadding(16)
-
-            val nombre = TextView(this)
-            nombre.text = "${producto.nombre} - $${producto.precio}"
-            nombre.textSize = 18f
-            layout.addView(nombre)
-
-            val uriProd = prefs.getString("imagen_producto_${usuario}_$index", null)
-            if (!uriProd.isNullOrEmpty()) {
-                val image = ImageView(this)
-                image.setImageURI(Uri.parse(uriProd))
-                image.layoutParams = LinearLayout.LayoutParams(300, 300)
-                layout.addView(image)
-            }
-
-            layout.setOnClickListener {
-                val intent = Intent(this, ViewProductActivity::class.java)
-                intent.putExtra("nombre", producto.nombre)
-                intent.putExtra("descripcion", producto.descripcion)
-                intent.putExtra("precio", producto.precio)
-                intent.putExtra("tipoCultivo", producto.tipoCultivo)
-                intent.putExtra("unidadVenta", producto.unidadVenta)
-                intent.putExtra("fechaCosecha", producto.fechaCosecha)
-                intent.putExtra("certificacion", producto.certificacion)
-                intent.putExtra("regionOrigen", producto.regionOrigen)
-                intent.putExtra("imagenUri", uriProd)
-                startActivity(intent)
-            }
-
-            contenedor.addView(layout)
+        // Imagen de la tienda
+        val uriStr = prefs.getString("imagen_tienda_$usuarioPropietario", null)
+        if (!uriStr.isNullOrEmpty()) {
+            imageViewTienda.setImageURI(Uri.parse(uriStr))
         }
 
-        findViewById<Button>(R.id.buttonVolver).setOnClickListener {
+        // Cargar productos del usuario propietario
+        val productos = Producto.cargarProductosDesdePrefs(prefs, usuarioPropietario)
+        contenedorProductos.removeAllViews()
+
+        for (producto in productos) {
+            val layout = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                setPadding(16, 16, 16, 16)
+            }
+
+            val image = ImageView(this).apply {
+                layoutParams = LinearLayout.LayoutParams(300, 300)
+                val uri = prefs.getString("imagen_producto_${usuarioPropietario}_${producto.nombre}", null)
+                if (!uri.isNullOrEmpty()) {
+                    setImageURI(Uri.parse(uri))
+                } else {
+                    setImageResource(R.drawable.imagen_producto) // imagen por defecto
+                }
+            }
+
+            val texto = TextView(this).apply {
+                text = "${producto.nombre} - ${producto.precio}"
+                textSize = 18f
+            }
+
+            val botonVer = Button(this).apply {
+                text = "Ver Producto"
+                setOnClickListener {
+                    val intent = Intent(this@ViewStoreActivity, ViewProductActivity::class.java)
+                    intent.putExtra("usuario_propietario", usuarioPropietario)
+                    intent.putExtra("producto", Gson().toJson(producto))
+                    startActivity(intent)
+                }
+            }
+
+            layout.addView(image)
+            layout.addView(texto)
+            layout.addView(botonVer)
+            contenedorProductos.addView(layout)
+        }
+
+        buttonVolver.setOnClickListener {
             finish()
         }
 
-        findViewById<Button>(R.id.buttonCerrarSesion).setOnClickListener {
+        buttonCerrarSesion.setOnClickListener {
             prefs.edit().remove("usuario_actual").apply()
-            startActivity(Intent(this, LoginActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            })
+            startActivity(Intent(this, LoginActivity::class.java))
+            finishAffinity()
         }
     }
 }

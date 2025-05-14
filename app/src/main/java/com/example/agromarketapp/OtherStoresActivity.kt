@@ -5,76 +5,105 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.setPadding
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class OtherStoresActivity : AppCompatActivity() {
 
-    private lateinit var prefs: android.content.SharedPreferences
-    private lateinit var usuarioActual: String
-    private lateinit var contenedor: LinearLayout
+    private lateinit var contenedorTiendas: LinearLayout
+    private lateinit var buttonVolver: Button
+    private lateinit var buttonCerrarSesion: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_stores)
 
-        prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
-        usuarioActual = prefs.getString("usuario_actual", "") ?: ""
-        contenedor = findViewById(R.id.contenedorTiendas)
+        contenedorTiendas = findViewById(R.id.contenedorTiendas)
+        buttonVolver = findViewById(R.id.buttonVolver)
+        buttonCerrarSesion = findViewById(R.id.buttonCerrarSesion)
 
-        val usuarios = prefs.getString("usuarios", null)?.split(";")?.mapNotNull {
-            val campos = it.split("|")
-            campos.getOrNull(0)
-        }?.filter { it != usuarioActual } ?: emptyList()
+        val prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
+        val usuarioActual = prefs.getString("usuario_actual", null)
 
-        contenedor.removeAllViews()
+        // Cargar lista de usuarios
+        val listaUsuarios = Usuario.cargarUsuariosDesdePrefs(prefs)
 
-        usuarios.forEach { usuario ->
-            val tiendaStr = prefs.getString("tienda_$usuario", null)
-            val tiendaCampos = tiendaStr?.split("|") ?: return@forEach
+        // Mostrar solo las tiendas de otros usuarios
+        val otrosUsuarios = listaUsuarios.filter { it.usuario != usuarioActual }
 
-            val layout = LinearLayout(this)
-            layout.orientation = LinearLayout.VERTICAL
-            layout.setPadding(16)
+        contenedorTiendas.removeAllViews()
 
-            val nombre = TextView(this)
-            nombre.text = tiendaCampos.getOrNull(0) ?: "Tienda sin nombre"
-            nombre.textSize = 18f
-            layout.addView(nombre)
+        for (usuario in otrosUsuarios) {
+            val tiendaJson = prefs.getString("tienda_${usuario.usuario}", null)
+            if (!tiendaJson.isNullOrEmpty()) {
+                val tienda = Gson().fromJson(tiendaJson, Tienda::class.java)
 
-            val descripcion = TextView(this)
-            descripcion.text = tiendaCampos.getOrNull(1) ?: ""
-            layout.addView(descripcion)
-
-            val uri = prefs.getString("imagen_tienda_$usuario", null)
-            if (!uri.isNullOrEmpty()) {
-                try {
-                    val image = ImageView(this)
-                    image.setImageURI(Uri.parse(uri))
-                    image.layoutParams = LinearLayout.LayoutParams(300, 300)
-                    layout.addView(image)
-                } catch (e: Exception) {
-                    Toast.makeText(this, "Error al cargar imagen de tienda", Toast.LENGTH_SHORT).show()
+                val layout = LinearLayout(this).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                    setPadding(24, 24, 24, 24)
+                    val params = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    params.setMargins(0, 16, 0, 16)
+                    layoutParams = params
+                    background = getDrawable(R.drawable.card_background) // fondo opcional
                 }
-            }
 
-            layout.setOnClickListener {
-                val intent = Intent(this, ViewStoreActivity::class.java)
-                intent.putExtra("usuario", usuario)
-                startActivity(intent)
-            }
+                val imageView = ImageView(this).apply {
+                    layoutParams = LinearLayout.LayoutParams(200, 200)
+                    val uri = prefs.getString("imagen_tienda_${usuario.usuario}", null)
+                    if (!uri.isNullOrEmpty()) {
+                        setImageURI(Uri.parse(uri))
+                    } else {
+                        setImageResource(R.drawable.imagen_tienda) // imagen por defecto
+                    }
+                }
 
-            contenedor.addView(layout)
+                val datos = LinearLayout(this).apply {
+                    orientation = LinearLayout.VERTICAL
+                    setPadding(16, 0, 0, 0)
+                    layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                }
+
+                val nombre = TextView(this).apply {
+                    text = tienda.nombre
+                    textSize = 18f
+                }
+
+                val categoria = TextView(this).apply {
+                    text = "Categoría: ${tienda.categoria}"
+                    textSize = 16f
+                }
+
+                val botonVer = Button(this).apply {
+                    text = "Ver tienda"
+                    setOnClickListener {
+                        val intent = Intent(this@OtherStoresActivity, ViewStoreActivity::class.java)
+                        intent.putExtra("usuario_propietario", usuario.usuario)
+                        startActivity(intent)
+                    }
+                }
+
+                datos.addView(nombre)
+                datos.addView(categoria)
+                datos.addView(botonVer)
+
+                layout.addView(imageView)
+                layout.addView(datos)
+
+                contenedorTiendas.addView(layout)
+            }
         }
 
-        findViewById<Button>(R.id.buttonVolver).setOnClickListener {
+        buttonVolver.setOnClickListener {
             finish()
         }
 
-        findViewById<Button>(R.id.buttonCerrarSesion).setOnClickListener {
+        buttonCerrarSesion.setOnClickListener {
             prefs.edit().remove("usuario_actual").apply()
-            startActivity(Intent(this, LoginActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            })
+            startActivity(Intent(this, LoginActivity::class.java))
+            finishAffinity()
         }
     }
 }

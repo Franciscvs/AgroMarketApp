@@ -22,7 +22,7 @@
             android:layout_height="0dp"
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"
-            android:alpha="0.4"
+            android:alpha="0.5"
             android:src="@drawable/cosecha_en_campo_verde__"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

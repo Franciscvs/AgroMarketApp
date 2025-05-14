@@ -5,91 +5,101 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.setPadding
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class NewProductsActivity : AppCompatActivity() {
 
-    private lateinit var prefs: android.content.SharedPreferences
-    private lateinit var usuarioActual: String
-    private lateinit var contenedor: LinearLayout
+    private lateinit var contenedorProductos: LinearLayout
+    private lateinit var buttonVolver: Button
+    private lateinit var buttonCerrarSesion: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_products)
 
-        prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
-        usuarioActual = prefs.getString("usuario_actual", "") ?: ""
-        contenedor = findViewById(R.id.contenedorNuevosProductos)
+        contenedorProductos = findViewById(R.id.contenedorProductos)
+        buttonVolver = findViewById(R.id.buttonVolver)
+        buttonCerrarSesion = findViewById(R.id.buttonCerrarSesion)
 
-        val todosLosUsuarios = prefs.getString("usuarios", null)?.split(";")?.mapNotNull {
-            val campos = it.split("|")
-            campos.getOrNull(0)
-        } ?: emptyList()
+        val prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
+        val usuarioActual = prefs.getString("usuario_actual", null)
 
-        contenedor.removeAllViews()
+        // Cargar lista de todos los usuarios
+        val listaUsuarios = Usuario.cargarUsuariosDesdePrefs(prefs)
 
-        todosLosUsuarios.forEach { usuario ->
-            val productosStr = prefs.getString("productos_$usuario", null)
-            val productos = productosStr?.split(";")?.map {
-                val campos = it.split("|")
-                Producto(
-                    campos.getOrElse(0) { "" },
-                    campos.getOrElse(1) { "" },
-                    campos.getOrElse(2) { "0.0" }.toDoubleOrNull() ?: 0.0,
-                    campos.getOrElse(3) { "" },
-                    campos.getOrElse(4) { "" },
-                    campos.getOrElse(5) { "" },
-                    campos.getOrElse(6) { "" },
-                    campos.getOrElse(7) { "" }
-                )
-            } ?: emptyList()
+        contenedorProductos.removeAllViews()
 
-            productos.forEachIndexed { index, producto ->
-                val layout = LinearLayout(this)
-                layout.orientation = LinearLayout.VERTICAL
-                layout.setPadding(16)
-
-                val nombre = TextView(this)
-                nombre.text = "${producto.nombre} - $${producto.precio}"
-                nombre.textSize = 18f
-                layout.addView(nombre)
-
-                val uri = prefs.getString("imagen_producto_${usuario}_$index", null)
-                if (!uri.isNullOrEmpty()) {
-                    val image = ImageView(this)
-                    image.setImageURI(Uri.parse(uri))
-                    image.layoutParams = LinearLayout.LayoutParams(300, 300)
-                    layout.addView(image)
+        for (usuario in listaUsuarios) {
+            val productos = Producto.cargarProductosDesdePrefs(prefs, usuario.usuario)
+            for (producto in productos) {
+                val layout = LinearLayout(this).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                    setPadding(24, 24, 24, 24)
+                    val params = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    params.setMargins(0, 16, 0, 16)
+                    layoutParams = params
+                    background = getDrawable(R.drawable.card_background)
                 }
 
-                layout.setOnClickListener {
-                    val intent = Intent(this, ViewProductActivity::class.java)
-                    intent.putExtra("nombre", producto.nombre)
-                    intent.putExtra("descripcion", producto.descripcion)
-                    intent.putExtra("precio", producto.precio)
-                    intent.putExtra("tipoCultivo", producto.tipoCultivo)
-                    intent.putExtra("unidadVenta", producto.unidadVenta)
-                    intent.putExtra("fechaCosecha", producto.fechaCosecha)
-                    intent.putExtra("certificacion", producto.certificacion)
-                    intent.putExtra("regionOrigen", producto.regionOrigen)
-                    intent.putExtra("imagenUri", uri)
-                    startActivity(intent)
+                val imageView = ImageView(this).apply {
+                    layoutParams = LinearLayout.LayoutParams(200, 200)
+                    val uriStr = prefs.getString("imagen_producto_${usuario.usuario}_${producto.nombre}", null)
+                    if (!uriStr.isNullOrEmpty()) {
+                        setImageURI(Uri.parse(uriStr))
+                    } else {
+                        setImageResource(R.drawable.imagen_producto) // imagen por defecto
+                    }
                 }
 
-                contenedor.addView(layout)
+                val datos = LinearLayout(this).apply {
+                    orientation = LinearLayout.VERTICAL
+                    setPadding(16, 0, 0, 0)
+                    layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                }
+
+                val nombre = TextView(this).apply {
+                    text = producto.nombre
+                    textSize = 18f
+                }
+
+                val precio = TextView(this).apply {
+                    text = "Precio: ${producto.precio}"
+                    textSize = 16f
+                }
+
+                val botonVer = Button(this).apply {
+                    text = "Ver producto"
+                    setOnClickListener {
+                        val intent = Intent(this@NewProductsActivity, ViewProductActivity::class.java)
+                        intent.putExtra("producto", Gson().toJson(producto))
+                        intent.putExtra("usuario_propietario", usuario.usuario)
+                        startActivity(intent)
+                    }
+                }
+
+                datos.addView(nombre)
+                datos.addView(precio)
+                datos.addView(botonVer)
+
+                layout.addView(imageView)
+                layout.addView(datos)
+
+                contenedorProductos.addView(layout)
             }
         }
 
-        findViewById<Button>(R.id.buttonVolver).setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
+        buttonVolver.setOnClickListener {
             finish()
         }
 
-        findViewById<Button>(R.id.buttonCerrarSesion).setOnClickListener {
+        buttonCerrarSesion.setOnClickListener {
             prefs.edit().remove("usuario_actual").apply()
-            startActivity(Intent(this, LoginActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            })
+            startActivity(Intent(this, LoginActivity::class.java))
+            finishAffinity()
         }
     }
 }

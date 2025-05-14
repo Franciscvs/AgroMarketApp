@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
@@ -14,6 +13,7 @@
         android:layout_height="wrap_content"
         android:padding="0dp">
 
+        <!-- Fondo -->
         <ImageView
             android:id="@+id/Imageview1"
             android:layout_width="0dp"
@@ -24,157 +24,159 @@
             android:focusable="false"
             android:scaleType="centerCrop"
             android:src="@drawable/campos_y_tractores_en_acci_n"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Imagen de la tienda -->
         <ImageView
             android:id="@+id/imageViewTienda"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_marginTop="68dp"
-            android:clickable="true"
-            android:focusable="true"
+            android:layout_marginTop="24dp"
             android:scaleType="centerCrop"
             android:src="@drawable/imagen_tienda"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Botón seleccionar imagen -->
         <Button
             android:id="@+id/buttonSeleccionarImagenTienda"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Seleccionar Imagen"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="#FFFFFF"
             android:backgroundTint="#6A1B9A"
+            android:layout_marginTop="12dp"
             app:layout_constraintTop_toBottomOf="@id/imageViewTienda"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="12dp" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Campos de texto -->
         <EditText
             android:id="@+id/editTextNombreTienda"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Nombre de la tienda"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="#000000"
             android:textColorHint="#000000"
+            android:layout_marginTop="16dp"
             app:layout_constraintTop_toBottomOf="@id/buttonSeleccionarImagenTienda"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <EditText
             android:id="@+id/editTextDescripcionTienda"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Descripción"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="#000000"
             android:textColorHint="#000000"
+            android:layout_marginTop="12dp"
             app:layout_constraintTop_toBottomOf="@id/editTextNombreTienda"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="12dp" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <EditText
             android:id="@+id/editTextUbicacion"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Ubicación / Dirección"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="#000000"
             android:textColorHint="#000000"
+            android:layout_marginTop="12dp"
             app:layout_constraintTop_toBottomOf="@id/editTextDescripcionTienda"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="12dp" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <EditText
             android:id="@+id/editTextHorario"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Horario de atención"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="#000000"
             android:textColorHint="#000000"
+            android:layout_marginTop="12dp"
             app:layout_constraintTop_toBottomOf="@id/editTextUbicacion"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="12dp" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <EditText
             android:id="@+id/editTextContacto"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Número de contacto / WhatsApp"
-            android:textSize="20sp"
+            android:inputType="phone"
+            android:textSize="18sp"
             android:textColor="#000000"
             android:textColorHint="#000000"
-            android:inputType="phone"
+            android:layout_marginTop="12dp"
             app:layout_constraintTop_toBottomOf="@id/editTextHorario"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="12dp" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <EditText
             android:id="@+id/editTextCategoria"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Categoría / Tipo de tienda"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="#000000"
             android:textColorHint="#000000"
+            android:layout_marginTop="12dp"
             app:layout_constraintTop_toBottomOf="@id/editTextContacto"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="12dp" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Botón Guardar -->
         <Button
             android:id="@+id/buttonGuardarTienda"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="112dp"
-            android:layout_marginTop="44dp"
-            android:backgroundTint="#4CAF50"
             android:text="Guardar"
             android:textColor="#FFFFFF"
-            android:textSize="20sp"
+            android:textSize="18sp"
+            android:backgroundTint="#4CAF50"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/editTextCategoria"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/editTextCategoria" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Botones Volver y Cerrar Sesión en una fila -->
         <Button
             android:id="@+id/buttonVolver"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="44dp"
-            android:backgroundTint="#8A6120"
             android:text="Volver"
             android:textColor="#FFFFFF"
-            android:textSize="20sp"
+            android:textSize="18sp"
+            android:backgroundTint="#8A6120"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintTop_toBottomOf="@id/buttonGuardarTienda"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/buttonGuardarTienda" />
+            app:layout_constraintEnd_toStartOf="@id/buttonCerrarSesion" />
 
         <Button
             android:id="@+id/buttonCerrarSesion"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="44dp"
-            android:layout_marginEnd="16dp"
-            android:backgroundTint="#D32F2F"
             android:text="Cerrar Sesión"
             android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/buttonGuardarTienda" />
+            android:textSize="18sp"
+            android:backgroundTint="#D32F2F"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toBottomOf="@id/buttonGuardarTienda"
+            app:layout_constraintStart_toEndOf="@id/buttonVolver"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

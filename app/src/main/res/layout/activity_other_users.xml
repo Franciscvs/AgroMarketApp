@@ -1,53 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    android:fillViewport="true"
     tools:context=".OtherUsersActivity">
 
+    <!-- Imagen de fondo -->
     <ImageView
         android:id="@+id/Imageview1"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:adjustViewBounds="true"
-        android:alpha="0.5"
-        android:clickable="false"
-        android:focusable="false"
         android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:alpha="0.4"
         android:src="@drawable/canaazucar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Título -->
     <TextView
         android:id="@+id/textViewTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Otros Usuarios"
-        android:textSize="30sp"
-        android:textColor="#000000"
+        android:textSize="35sp"
         android:textStyle="bold"
+        android:textColor="#000000"
+        android:layout_marginTop="24dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Scroll con lista de usuarios -->
     <ScrollView
         android:id="@+id/scrollUsuarios"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginHorizontal="16dp"
-        android:textColor="#000000"
-        android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@id/textViewTitulo"
-        app:layout_constraintBottom_toTopOf="@id/buttonVolver"
+        app:layout_constraintBottom_toTopOf="@id/layoutBotonera"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -55,39 +54,43 @@
             android:id="@+id/contenedorUsuarios"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#000000"
-            android:textSize="20sp"
-            android:orientation="vertical" />
+            android:orientation="vertical"
+            android:divider="?android:attr/dividerHorizontal"
+            android:showDividers="middle"
+            android:padding="8dp" />
     </ScrollView>
 
-    <Button
-        android:id="@+id/buttonVolver"
-        android:layout_width="wrap_content"
+    <!-- Botones inferiores agrupados -->
+    <LinearLayout
+        android:id="@+id/layoutBotonera"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="72dp"
-        android:layout_marginBottom="104dp"
-        android:backgroundTint="#8A6120"
-        android:text="Volver a Menú Principal"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.987" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <Button
-        android:id="@+id/buttonCerrarSesion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="116dp"
-        android:layout_marginBottom="28dp"
-        android:backgroundTint="#D32F2F"
-        android:text="Cerrar Sesión"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <Button
+            android:id="@+id/buttonVolver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Volver a Menú Principal"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:backgroundTint="#8A6120"
+            android:layout_marginEnd="16dp" />
+
+        <Button
+            android:id="@+id/buttonCerrarSesion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cerrar Sesión"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:backgroundTint="#D32F2F" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

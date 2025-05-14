@@ -1,174 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:background="#FFFFFF">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        android:adjustViewBounds="true"
         android:padding="0dp">
 
+        <!-- Fondo -->
         <ImageView
             android:id="@+id/Imageview1"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:adjustViewBounds="true"
-            android:alpha="0.5"
-            android:clickable="false"
-            android:focusable="false"
             android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:alpha="0.4"
             android:src="@drawable/arado"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Imagen del producto -->
         <ImageView
             android:id="@+id/imageViewProducto"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_marginTop="44dp"
+            android:layout_marginTop="24dp"
             android:scaleType="centerCrop"
             android:src="@drawable/imagen_producto"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.505"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Nombre del producto -->
         <TextView
             android:id="@+id/textNombreProducto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Nombre del producto"
-            android:textSize="30sp"
+            android:textSize="28sp"
             android:textStyle="bold"
+            android:textColor="#000000"
             android:layout_marginTop="16dp"
             app:layout_constraintTop_toBottomOf="@id/imageViewProducto"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
-            android:id="@+id/textDescripcionProducto"
+        <!-- Contenedor de atributos -->
+        <LinearLayout
+            android:id="@+id/contenedorDetalles"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Descripción"
-            android:textSize="25sp"
-            android:textColor="#000000"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="24dp"
+            android:padding="8dp"
             app:layout_constraintTop_toBottomOf="@id/textNombreProducto"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="8dp" />
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
-            android:id="@+id/textPrecioProducto"
-            android:layout_width="wrap_content"
+            <TextView android:id="@+id/textDescripcionProducto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Descripción: "
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="4dp" />
+
+            <TextView android:id="@+id/textPrecioProducto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Precio:"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="4dp" />
+
+            <TextView android:id="@+id/textTipoCultivo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tipo de cultivo: "
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="4dp" />
+
+            <TextView android:id="@+id/textUnidadVenta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Unidad de venta: "
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="4dp" />
+
+            <TextView android:id="@+id/textFechaCosecha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Fecha de cosecha: "
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="4dp" />
+
+            <TextView android:id="@+id/textCertificacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Certificación: "
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="4dp" />
+
+            <TextView android:id="@+id/textRegionOrigen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Región de origen: "
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="4dp" />
+        </LinearLayout>
+
+        <!-- Botonera -->
+        <LinearLayout
+            android:id="@+id/botonera"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Precio"
-            android:textSize="25sp"
-            android:textColor="#000000"
-            app:layout_constraintTop_toBottomOf="@id/textDescripcionProducto"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="32dp"
+            app:layout_constraintTop_toBottomOf="@id/contenedorDetalles"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="8dp" />
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
-            android:id="@+id/textTipoCultivo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tipo de cultivo:"
-            android:textSize="25sp"
-            android:textColor="#000000"
-            app:layout_constraintTop_toBottomOf="@id/textPrecioProducto"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="8dp" />
+            <Button
+                android:id="@+id/buttonVolver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Volver"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:backgroundTint="#8A6120"
+                android:layout_marginEnd="16dp" />
 
-        <TextView
-            android:id="@+id/textUnidadVenta"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Unidad de venta:"
-            android:textSize="25sp"
-            android:textColor="#000000"
-            app:layout_constraintTop_toBottomOf="@id/textTipoCultivo"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="4dp" />
+            <Button
+                android:id="@+id/buttonCerrarSesion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cerrar Sesión"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:backgroundTint="#D32F2F"
+                android:layout_marginEnd="16dp" />
 
-        <TextView
-            android:id="@+id/textFechaCosecha"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Fecha de cosecha:"
-            android:textSize="25sp"
-            android:textColor="#000000"
-            app:layout_constraintTop_toBottomOf="@id/textUnidadVenta"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="4dp" />
-
-        <TextView
-            android:id="@+id/textCertificacion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Certificación:"
-            android:textSize="25sp"
-            android:textColor="#000000"
-            app:layout_constraintTop_toBottomOf="@id/textFechaCosecha"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="4dp" />
-
-        <TextView
-            android:id="@+id/textRegionOrigen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Región de origen:"
-            android:textSize="25sp"
-            android:textColor="#000000"
-            app:layout_constraintTop_toBottomOf="@id/textCertificacion"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="4dp" />
-
-        <Button
-            android:id="@+id/buttonComprar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="128dp"
-            android:layout_marginTop="136dp"
-            android:backgroundTint="#4CAF50"
-            android:text="Comprar"
-            android:textColor="#FFFFFF"
-            android:textSize="25sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textRegionOrigen" />
-
-        <Button
-            android:id="@+id/buttonVolver"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="112dp"
-            android:backgroundTint="#8A6120"
-            android:text="Volver"
-            android:textColor="#FFFFFF"
-            android:textSize="25sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/buttonComprar" />
-
-        <Button
-            android:id="@+id/buttonCerrarSesion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="112dp"
-            android:layout_marginEnd="16dp"
-            android:backgroundTint="#D32F2F"
-            android:text="Cerrar Sesión"
-            android:textColor="#FFFFFF"
-            android:textSize="25sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/buttonComprar" />
+            <Button
+                android:id="@+id/buttonComprar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Comprar"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:backgroundTint="#4CAF50" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

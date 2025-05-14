@@ -4,9 +4,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 class YourStoreActivity : AppCompatActivity() {
 
@@ -61,17 +61,17 @@ class YourStoreActivity : AppCompatActivity() {
             textCategoria.text = "Categoría: ${tienda.categoria}"
         }
 
-        // Imagen de la tienda
+        // Imagen tienda
         val uriTienda = prefs.getString("imagen_tienda_$usuarioActual", null)
         if (!uriTienda.isNullOrEmpty()) {
             imageViewTienda.setImageURI(Uri.parse(uriTienda))
         }
 
-        // Cargar productos del usuario
+        // Cargar productos del usuario actual
         val productos = Producto.cargarProductosDesdePrefs(prefs, usuarioActual)
         contenedorProductos.removeAllViews()
 
-        for (producto in productos) {
+        for (producto in productos.toList()) {
             val layout = LinearLayout(this).apply {
                 orientation = LinearLayout.VERTICAL
                 setPadding(16, 16, 16, 16)
@@ -83,7 +83,7 @@ class YourStoreActivity : AppCompatActivity() {
                 if (!uri.isNullOrEmpty()) {
                     setImageURI(Uri.parse(uri))
                 } else {
-                    setImageResource(R.drawable.imagen_producto) // por defecto
+                    setImageResource(R.drawable.imagen_producto) // imagen por defecto
                 }
             }
 
@@ -97,6 +97,7 @@ class YourStoreActivity : AppCompatActivity() {
                 setOnClickListener {
                     val intent = Intent(this@YourStoreActivity, ViewProductActivity::class.java)
                     intent.putExtra("producto", Gson().toJson(producto))
+                    intent.putExtra("usuario_propietario", usuarioActual)
                     startActivity(intent)
                 }
             }
@@ -110,10 +111,28 @@ class YourStoreActivity : AppCompatActivity() {
                 }
             }
 
+            val botonEliminar = Button(this).apply {
+                text = "Eliminar"
+                setOnClickListener {
+                    AlertDialog.Builder(this@YourStoreActivity)
+                        .setTitle("Eliminar producto")
+                        .setMessage("¿Estás seguro de que deseas eliminar '${producto.nombre}'?")
+                        .setPositiveButton("Sí") { _, _ ->
+                            productos.remove(producto)
+                            Producto.guardarProductosEnPrefs(prefs, usuarioActual, productos)
+                            prefs.edit().remove("imagen_producto_${usuarioActual}_${producto.nombre}").apply()
+                            recreate()
+                        }
+                        .setNegativeButton("Cancelar", null)
+                        .show()
+                }
+            }
+
             layout.addView(image)
             layout.addView(texto)
             layout.addView(botonVer)
             layout.addView(botonEditar)
+            layout.addView(botonEliminar)
 
             contenedorProductos.addView(layout)
         }

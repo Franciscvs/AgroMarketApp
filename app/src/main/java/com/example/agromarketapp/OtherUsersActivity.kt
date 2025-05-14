@@ -3,38 +3,82 @@ package com.example.agromarketapp
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.Gravity
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 class OtherUsersActivity : AppCompatActivity() {
 
     private lateinit var contenedorUsuarios: LinearLayout
+    private lateinit var editBuscarUsuario: EditText
+    private lateinit var buttonBuscarUsuario: Button
     private lateinit var buttonVolver: Button
     private lateinit var buttonCerrarSesion: Button
+
+    private lateinit var prefs: android.content.SharedPreferences
+    private lateinit var usuarioActual: String
+    private var todosLosUsuarios = mutableListOf<Usuario>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_users)
 
         contenedorUsuarios = findViewById(R.id.contenedorUsuarios)
+        editBuscarUsuario = findViewById(R.id.editBuscarUsuario)
+        buttonBuscarUsuario = findViewById(R.id.buttonBuscarUsuario)
         buttonVolver = findViewById(R.id.buttonVolver)
         buttonCerrarSesion = findViewById(R.id.buttonCerrarSesion)
 
-        val prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
-        val usuarioActual = prefs.getString("usuario_actual", null)
+        prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
+        usuarioActual = prefs.getString("usuario_actual", "") ?: ""
 
-        // Cargar lista de usuarios
-        val listaUsuarios = Usuario.cargarUsuariosDesdePrefs(prefs)
+        cargarUsuarios()
+        mostrarUsuarios(todosLosUsuarios)
 
-        // Mostrar solo los otros usuarios
-        val otros = listaUsuarios.filter { it.usuario != usuarioActual }
+        buttonBuscarUsuario.setOnClickListener {
+            val filtro = editBuscarUsuario.text.toString().trim().lowercase()
+            val resultado = if (filtro.isEmpty()) {
+                todosLosUsuarios
+            } else {
+                todosLosUsuarios.filter {
+                    it.usuario.lowercase().contains(filtro) ||
+                            it.nombres.lowercase().contains(filtro) ||
+                            it.apellidos.lowercase().contains(filtro)
+                }.toMutableList()
+            }
+            mostrarUsuarios(resultado)
+        }
 
+        buttonVolver.setOnClickListener {
+            finish()
+        }
+
+        buttonCerrarSesion.setOnClickListener {
+            prefs.edit().remove("usuario_actual").apply()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finishAffinity()
+        }
+    }
+
+    private fun cargarUsuarios() {
+        val lista = Usuario.cargarUsuariosDesdePrefs(prefs)
+        todosLosUsuarios = lista.filter { it.usuario != usuarioActual }.toMutableList()
+    }
+
+    private fun mostrarUsuarios(lista: List<Usuario>) {
         contenedorUsuarios.removeAllViews()
 
-        for (usuario in otros) {
+        if (lista.isEmpty()) {
+            val texto = TextView(this).apply {
+                text = "No se encontraron usuarios."
+                textSize = 18f
+                gravity = android.view.Gravity.CENTER
+            }
+            contenedorUsuarios.addView(texto)
+            return
+        }
+
+        for (usuario in lista) {
             val layout = LinearLayout(this).apply {
                 orientation = LinearLayout.HORIZONTAL
                 setPadding(24, 24, 24, 24)
@@ -44,7 +88,7 @@ class OtherUsersActivity : AppCompatActivity() {
                 )
                 params.setMargins(0, 16, 0, 16)
                 layoutParams = params
-                background = getDrawable(R.drawable.card_background) // fondo opcional si lo tienes
+                background = getDrawable(R.drawable.card_background)
             }
 
             val imageView = ImageView(this).apply {
@@ -53,7 +97,7 @@ class OtherUsersActivity : AppCompatActivity() {
                 if (!uriStr.isNullOrEmpty()) {
                     setImageURI(Uri.parse(uriStr))
                 } else {
-                    setImageResource(R.drawable.imagen_usuario) // imagen por defecto
+                    setImageResource(R.drawable.imagen_usuario)
                 }
             }
 
@@ -90,16 +134,6 @@ class OtherUsersActivity : AppCompatActivity() {
             layout.addView(datos)
 
             contenedorUsuarios.addView(layout)
-        }
-
-        buttonVolver.setOnClickListener {
-            finish()
-        }
-
-        buttonCerrarSesion.setOnClickListener {
-            prefs.edit().remove("usuario_actual").apply()
-            startActivity(Intent(this, LoginActivity::class.java))
-            finishAffinity()
         }
     }
 }

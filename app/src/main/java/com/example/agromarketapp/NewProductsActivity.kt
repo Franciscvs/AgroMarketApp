@@ -11,85 +11,42 @@ import com.google.gson.reflect.TypeToken
 class NewProductsActivity : AppCompatActivity() {
 
     private lateinit var contenedorProductos: LinearLayout
+    private lateinit var editBuscarProducto: EditText
+    private lateinit var buttonBuscar: Button
     private lateinit var buttonVolver: Button
     private lateinit var buttonCerrarSesion: Button
+
+    private lateinit var prefs: android.content.SharedPreferences
+    private lateinit var usuarioActual: String
+
+    private var todosLosProductos = mutableListOf<Pair<Producto, String>>() // Producto + propietario
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_products)
 
         contenedorProductos = findViewById(R.id.contenedorProductos)
+        editBuscarProducto = findViewById(R.id.editBuscarProducto)
+        buttonBuscar = findViewById(R.id.buttonBuscar)
         buttonVolver = findViewById(R.id.buttonVolver)
         buttonCerrarSesion = findViewById(R.id.buttonCerrarSesion)
 
-        val prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
-        val usuarioActual = prefs.getString("usuario_actual", null)
+        prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
+        usuarioActual = prefs.getString("usuario_actual", "") ?: ""
 
-        // Cargar lista de todos los usuarios
-        val listaUsuarios = Usuario.cargarUsuariosDesdePrefs(prefs)
+        cargarTodosLosProductos()
+        mostrarProductos(todosLosProductos)
 
-        contenedorProductos.removeAllViews()
-
-        for (usuario in listaUsuarios) {
-            val productos = Producto.cargarProductosDesdePrefs(prefs, usuario.usuario)
-            for (producto in productos) {
-                val layout = LinearLayout(this).apply {
-                    orientation = LinearLayout.HORIZONTAL
-                    setPadding(24, 24, 24, 24)
-                    val params = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                    )
-                    params.setMargins(0, 16, 0, 16)
-                    layoutParams = params
-                    background = getDrawable(R.drawable.card_background)
-                }
-
-                val imageView = ImageView(this).apply {
-                    layoutParams = LinearLayout.LayoutParams(200, 200)
-                    val uriStr = prefs.getString("imagen_producto_${usuario.usuario}_${producto.nombre}", null)
-                    if (!uriStr.isNullOrEmpty()) {
-                        setImageURI(Uri.parse(uriStr))
-                    } else {
-                        setImageResource(R.drawable.imagen_producto) // imagen por defecto
-                    }
-                }
-
-                val datos = LinearLayout(this).apply {
-                    orientation = LinearLayout.VERTICAL
-                    setPadding(16, 0, 0, 0)
-                    layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-                }
-
-                val nombre = TextView(this).apply {
-                    text = producto.nombre
-                    textSize = 18f
-                }
-
-                val precio = TextView(this).apply {
-                    text = "Precio: ${producto.precio}"
-                    textSize = 16f
-                }
-
-                val botonVer = Button(this).apply {
-                    text = "Ver producto"
-                    setOnClickListener {
-                        val intent = Intent(this@NewProductsActivity, ViewProductActivity::class.java)
-                        intent.putExtra("producto", Gson().toJson(producto))
-                        intent.putExtra("usuario_propietario", usuario.usuario)
-                        startActivity(intent)
-                    }
-                }
-
-                datos.addView(nombre)
-                datos.addView(precio)
-                datos.addView(botonVer)
-
-                layout.addView(imageView)
-                layout.addView(datos)
-
-                contenedorProductos.addView(layout)
+        buttonBuscar.setOnClickListener {
+            val filtro = editBuscarProducto.text.toString().trim().lowercase()
+            val filtrados = if (filtro.isEmpty()) {
+                todosLosProductos
+            } else {
+                todosLosProductos.filter {
+                    it.first.nombre.lowercase().contains(filtro)
+                }.toMutableList()
             }
+            mostrarProductos(filtrados)
         }
 
         buttonVolver.setOnClickListener {
@@ -100,6 +57,90 @@ class NewProductsActivity : AppCompatActivity() {
             prefs.edit().remove("usuario_actual").apply()
             startActivity(Intent(this, LoginActivity::class.java))
             finishAffinity()
+        }
+    }
+
+    private fun cargarTodosLosProductos() {
+        todosLosProductos.clear()
+        val listaUsuarios = Usuario.cargarUsuariosDesdePrefs(prefs)
+        for (usuario in listaUsuarios) {
+            val productos = Producto.cargarProductosDesdePrefs(prefs, usuario.usuario)
+            for (producto in productos) {
+                todosLosProductos.add(Pair(producto, usuario.usuario))
+            }
+        }
+    }
+
+    private fun mostrarProductos(productos: List<Pair<Producto, String>>) {
+        contenedorProductos.removeAllViews()
+
+        if (productos.isEmpty()) {
+            val texto = TextView(this).apply {
+                text = "No se encontraron productos."
+                textSize = 18f
+                gravity = android.view.Gravity.CENTER
+            }
+            contenedorProductos.addView(texto)
+            return
+        }
+
+        for ((producto, propietario) in productos) {
+            val layout = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                setPadding(24, 24, 24, 24)
+                val params = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                params.setMargins(0, 16, 0, 16)
+                layoutParams = params
+                background = getDrawable(R.drawable.card_background)
+            }
+
+            val imageView = ImageView(this).apply {
+                layoutParams = LinearLayout.LayoutParams(200, 200)
+                val uriStr = prefs.getString("imagen_producto_${propietario}_${producto.nombre}", null)
+                if (!uriStr.isNullOrEmpty()) {
+                    setImageURI(Uri.parse(uriStr))
+                } else {
+                    setImageResource(R.drawable.imagen_producto)
+                }
+            }
+
+            val datos = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                setPadding(16, 0, 0, 0)
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            }
+
+            val nombre = TextView(this).apply {
+                text = producto.nombre
+                textSize = 18f
+            }
+
+            val precio = TextView(this).apply {
+                text = "Precio: ${producto.precio}"
+                textSize = 16f
+            }
+
+            val botonVer = Button(this).apply {
+                text = "Ver producto"
+                setOnClickListener {
+                    val intent = Intent(this@NewProductsActivity, ViewProductActivity::class.java)
+                    intent.putExtra("producto", Gson().toJson(producto))
+                    intent.putExtra("usuario_propietario", propietario)
+                    startActivity(intent)
+                }
+            }
+
+            datos.addView(nombre)
+            datos.addView(precio)
+            datos.addView(botonVer)
+
+            layout.addView(imageView)
+            layout.addView(datos)
+
+            contenedorProductos.addView(layout)
         }
     }
 }

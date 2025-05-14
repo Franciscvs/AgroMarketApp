@@ -22,6 +22,25 @@
             android:layout_gravity="center_horizontal"
             android:paddingBottom="16dp" />
 
+        <EditText
+            android:id="@+id/editBuscarTienda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Buscar por nombre o categoría"
+            android:inputType="text"
+            android:drawableStart="@android:drawable/ic_menu_search"
+            android:padding="12dp"
+            android:background="@android:drawable/edit_text"
+            android:layout_marginBottom="12dp" />
+
+        <Button
+            android:id="@+id/buttonBuscarTienda"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Buscar"
+            android:layout_gravity="end"
+            android:layout_marginBottom="16dp" />
+
         <LinearLayout
             android:id="@+id/contenedorTiendas"
             android:layout_width="match_parent"

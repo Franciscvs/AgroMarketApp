@@ -51,6 +51,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:backgroundTint="#8A6120"
             android:text="Volver" />
 
         <Space
@@ -62,6 +63,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:backgroundTint="#D32F2F"
             android:text="Cerrar sesión" />
     </LinearLayout>
 </LinearLayout>

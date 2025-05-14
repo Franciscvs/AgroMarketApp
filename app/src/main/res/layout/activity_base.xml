@@ -17,10 +17,10 @@
         android:alpha="0.5"
         android:scaleType="centerCrop"
         android:src="@drawable/imagen1"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Logo principal -->
     <ImageView
@@ -31,12 +31,12 @@
         android:adjustViewBounds="true"
         android:scaleType="centerInside"
         android:src="@drawable/logoagromarketapp"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/textView1"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.5"
-        app:layout_constraintHeight_percent="0.25" />
+        app:layout_constraintHeight_percent="0.25"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.5" />
 
     <!-- Título -->
     <TextView
@@ -47,9 +47,9 @@
         android:text="Bienvenido"
         android:textColor="#000000"
         android:textSize="32sp"
-        app:layout_constraintTop_toBottomOf="@id/imageView2"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/imageView2" />
 
     <!-- Subtítulos -->
     <TextView
@@ -61,9 +61,9 @@
         android:text="Únete a una App comprometida"
         android:textColor="#000000"
         android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/textView1"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/textView1" />
 
     <TextView
         android:id="@+id/textView3"
@@ -74,38 +74,38 @@
         android:text="con los agricultores de Colombia"
         android:textColor="#000000"
         android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/textView2"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/textView2" />
 
     <!-- Botones -->
     <Button
         android:id="@+id/button1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
         android:layout_marginHorizontal="48dp"
+        android:layout_marginTop="56dp"
         android:backgroundTint="#8A6120"
         android:text="Crear Cuenta"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/textView3"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/textView3" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginHorizontal="48dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="#8A6120"
         android:text="Iniciar Sesión"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/button1"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/button1" />
 
     <!-- Autores y año -->
 
@@ -132,9 +132,9 @@
         android:text="® 2025"
         android:textColor="#000000"
         android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/textView4"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/textView4" />
 
     <!-- Marca Colombiana -->
     <ImageView
@@ -143,9 +143,9 @@
         android:layout_height="56dp"
         android:layout_marginTop="8dp"
         android:src="@drawable/logo_agromarket_colombia"
-        app:layout_constraintTop_toBottomOf="@id/textView5"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/textView5" />
 
     <TextView
         android:id="@+id/textView"
@@ -154,9 +154,9 @@
         android:text="100% Colombiano"
         android:textColor="#000000"
         android:textSize="15sp"
-        app:layout_constraintTop_toBottomOf="@id/imageView3"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/imageView3" />
 
     <!-- Botón Borrar Datos -->
     <Button
@@ -170,5 +170,17 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/buttonResumen"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="#888888"
+        android:text="Resumen de la App"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

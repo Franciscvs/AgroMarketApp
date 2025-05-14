@@ -33,6 +33,10 @@ class BaseActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val botonResumen: Button = findViewById(R.id.buttonResumen)
+        botonResumen.setOnClickListener {
+            startActivity(Intent(this, SummaryActivity::class.java))
+        }
 
         val btnCrearCuenta = findViewById<Button>(R.id.button1)
         val btnIniciarSesion = findViewById<Button>(R.id.button2)

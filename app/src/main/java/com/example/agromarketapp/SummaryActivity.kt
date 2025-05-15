@@ -52,10 +52,5 @@ class SummaryActivity : AppCompatActivity() {
             finish()
         }
 
-        buttonCerrarSesion.setOnClickListener {
-            prefs.edit().remove("usuario_actual").apply()
-            startActivity(android.content.Intent(this, LoginActivity::class.java))
-            finishAffinity()
-        }
     }
 }

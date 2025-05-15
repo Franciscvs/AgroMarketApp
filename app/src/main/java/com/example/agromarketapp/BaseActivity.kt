@@ -21,7 +21,7 @@ class BaseActivity : AppCompatActivity() {
             insets
         }
 
-
+        /*
         val botonBorrarTodo = findViewById<Button>(R.id.buttonBorrarTodo)
         botonBorrarTodo.setOnClickListener {
             val prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
@@ -32,6 +32,8 @@ class BaseActivity : AppCompatActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
+        */
+
 
         val botonResumen: Button = findViewById(R.id.buttonResumen)
         botonResumen.setOnClickListener {

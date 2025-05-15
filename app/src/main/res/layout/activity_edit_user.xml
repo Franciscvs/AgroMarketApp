@@ -173,7 +173,7 @@
             android:id="@+id/buttonVolver"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Volver a Menú Principal"
+            android:text="Volver a Usuario"
             android:textSize="16sp"
             android:textColor="#FFFFFF"
             android:backgroundTint="#8A6120"

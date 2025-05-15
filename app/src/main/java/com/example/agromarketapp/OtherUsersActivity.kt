@@ -50,7 +50,7 @@ class OtherUsersActivity : AppCompatActivity() {
         }
 
         buttonVolver.setOnClickListener {
-            finish()
+            startActivity(Intent(this, MainActivity::class.java))
         }
 
         buttonCerrarSesion.setOnClickListener {

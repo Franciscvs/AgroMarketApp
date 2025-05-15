@@ -20,7 +20,7 @@ class EditStoreActivity : AppCompatActivity() {
     private lateinit var editHorario: EditText
     private lateinit var editContacto: EditText
     private lateinit var editCategoria: EditText
-
+    private lateinit var buttonVolver: Button
     private lateinit var buttonGuardar: Button
     private lateinit var buttonSeleccionarImagen: Button
 
@@ -39,7 +39,7 @@ class EditStoreActivity : AppCompatActivity() {
         editHorario = findViewById(R.id.editTextHorario)
         editContacto = findViewById(R.id.editTextContacto)
         editCategoria = findViewById(R.id.editTextCategoria)
-
+        buttonVolver = findViewById(R.id.buttonVolver)
         buttonGuardar = findViewById(R.id.buttonGuardarTienda)
         buttonSeleccionarImagen = findViewById(R.id.buttonSeleccionarImagenTienda)
 
@@ -69,6 +69,10 @@ class EditStoreActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
             startActivityForResult(intent, REQUEST_IMAGE_PICK)
+        }
+
+        buttonVolver.setOnClickListener {
+            startActivity(Intent(this, YourStoreActivity::class.java))
         }
 
         // Guardar tienda

@@ -116,7 +116,7 @@ class EditUserActivity : AppCompatActivity() {
         }
 
         buttonVolver.setOnClickListener {
-            finish()
+            startActivity(Intent(this, YourUsernameActivity::class.java))
         }
     }
 

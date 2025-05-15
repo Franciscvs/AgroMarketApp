@@ -22,7 +22,6 @@ class SummaryActivity : AppCompatActivity() {
         textTotalTiendas = findViewById(R.id.textTotalTiendas)
         textTotalProductos = findViewById(R.id.textTotalProductos)
         buttonVolver = findViewById(R.id.buttonVolver)
-        buttonCerrarSesion = findViewById(R.id.buttonCerrarSesion)
 
         val prefs = getSharedPreferences("datos_usuario", MODE_PRIVATE)
 

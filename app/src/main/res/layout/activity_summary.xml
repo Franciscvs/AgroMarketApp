@@ -75,6 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:backgroundTint="#8A6120"
+            android:textColor="#FFFFFF"
             android:text="Volver" />
 
         <Space

@@ -1,4 +1,4 @@
 Esta es una aplicación hecha por Francisco Puentes & Leonardo Ferreira para la compra y venta de productos donde los agricultores 
 podrán crear un usuario, una tienda y sus productos, así se facilitara el comerciar sus productos en Bogotá y el resto de Colombia.
 
-IMPORTANTE: la Versión del complemteo AGP fue degrada de la versión "8.10.0" de mayo de 2025 a la versión "8.7.2" de octubre de 2024 para facilitar la clonación de este repositorio y así después se podrá instalar el complemento más nuevo para este repositorio en el programa de Android Studio y su actualización vigente en el tiempo.
+IMPORTANTE: La Versión del complemento AGP fue degrada de la versión "8.10.0" de mayo de 2025 a la versión "8.7.2" de octubre de 2024 para facilitar la clonación de este repositorio y así después se podrá instalar el complemento más nuevo para este repositorio en el programa de Android Studio y su actualización vigente en el tiempo.
